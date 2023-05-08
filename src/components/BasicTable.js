@@ -45,16 +45,15 @@ function BasicTable(props) {
     });
     cols.push({field: 'actions', type: 'actions', 'getActions': (params) => [
       <GridActionsCellItem
-        icon={<DeleteIcon />}
-        label="Delete"
-        onClick={onDelete(params.id)}
-      />,
-      <GridActionsCellItem
         icon={<EditIcon />}
         label="Edit"
-        onClick={onEdit(params.id)}
-        showInMenu
-      />
+        onClick={() => onEdit(params.id)}
+      />,
+      <GridActionsCellItem
+        icon={<DeleteIcon />}
+        label="Delete"
+        onClick={() => onDelete(params.id)}
+      />,
     ],})
     return cols
   }
