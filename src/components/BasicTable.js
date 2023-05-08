@@ -4,7 +4,6 @@ import Table from '@mui/material/Table';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { styled } from '@mui/material/styles';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -15,6 +14,8 @@ import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import { titleCase } from '../utils/helper';
+
 
 const StyledTable = styled(Table)({
   minWidth: 650,
@@ -27,10 +28,6 @@ const StyledTable = styled(Table)({
 const WarningIconButton = styled(IconButton)({
   color: amber["400"]
 });
-
-const titleCase = (str) => {
-    return str.replace(/\b\w/g, (char) => char.toUpperCase());
-  };
   
 
 function BasicTable(props) {
@@ -40,17 +37,20 @@ function BasicTable(props) {
     if(data && data.length > 0 ) {
       const columnData = data.map((row) => row[columnName]);
   
-    const longest = columnData.reduce((a, b) => {
-      return a.toString().length > b.toString().length ? a.toString() : b.toString();
-    });
+      const longest = columnData.reduce((a, b) => {
+        a = a || '';
+        b = b || '';
+        return a.toString().length > b.toString().length ? a.toString() : b.toString();
+      });
   
-    const width = longest.length * 8; // assuming 8 pixels per character
+      const width = longest.length * 8; // assuming 8 pixels per character
   
-    return width.toString();
+      return width.toString();
     } else {
       return '75'
     }
   }
+  
 
   const createColumnObjs = (columns) => {
     let cols = columns.map((column) => {
@@ -101,7 +101,8 @@ function BasicTable(props) {
         rows={data}
         columns={createColumnObjs(columns)}
         getRowId={row => `${row.id}`} />
-    </Box><Dialog open={open} onClose={handleClose}>
+    </Box>
+    <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{editingRow?.bar}</DialogTitle>
         <DialogContent>
   {Object.entries(editingRow).map(([key]) => {

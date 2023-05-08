@@ -1,14 +1,11 @@
 import BasicTable from './components/BasicTable';
-import { Box, Button } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import React, { useState, useEffect } from 'react';
-  
-
-  
+import AddData from './components/AddData';
   
 
   const Course = () => {
     const [holes, setHoles] = useState([]);
+    const cols = ["Hole", "Bar", "Drink", "Par", "Hazard"]
 
     const handleDelete = (id) => {
       // Pass the id up to the parent component
@@ -18,7 +15,7 @@ import React, { useState, useEffect } from 'react';
     const handleEdit = (obj) => {
       // Pass the id up to the parent component
       console.log(`Hole to edit: ${obj.id}`)
-      fetch(`http://localhost:3001/course/${obj.id}`, {
+      fetch(`http://localhost:3001/courses/${obj.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -43,7 +40,7 @@ import React, { useState, useEffect } from 'react';
   }, []);
 
   const getData = async () => {
-    const response = await fetch('http://localhost:3001/course');
+    const response = await fetch('http://localhost:3001/courses');
     const data = await response.json();
     setHoles(data);
   };
@@ -51,12 +48,8 @@ import React, { useState, useEffect } from 'react';
     <main>
       <section id="course">
         <h2>Course</h2>
-        <Box display="flex" justifyContent="flex-end" alignItems="center" mb={2}>
-          <Button variant="outlined" color='success' startIcon={<AddIcon />}>
-            Add Hole
-          </Button>
-        </Box>
-        <BasicTable data={holes} columns={["Hole", "Bar", "Drink", "Par", "Hazard"]} onDelete={handleDelete} onEdit={handleEdit}></BasicTable>
+        <AddData title={'Hole'} endpoint={"courses"} fields={cols} onAdd={getData}/>
+        <BasicTable data={holes} columns={cols} onDelete={handleDelete} onEdit={handleEdit}></BasicTable>
       </section>
     </main>
   );
