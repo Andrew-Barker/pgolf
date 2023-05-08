@@ -1,25 +1,31 @@
-import logo from './logo.svg';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
+import Home from './Home';
+import Course from './Course';
+import Leaderboard from './Leaderboard';
+import Rules from './Rules';
+import Management from './Management';
+import Header from './Header';
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Header />
+      <div className="content">
+        <Routes className="routes">
+          <Route path="/" element={<Home />} />
+          <Route path="/course" element={<Course />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/rules" element={<Rules />} />
+          <Route path="/management" element={<Management />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
-
 export default App;
