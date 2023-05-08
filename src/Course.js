@@ -23,7 +23,7 @@ import React, { useState, useEffect } from 'react';
   }, []);
 
   const getData = async () => {
-    const response = await fetch('http://localhost:3001/holes');
+    const response = await fetch('http://localhost:3001/course');
     const data = await response.json();
     setHoles(data);
   };
@@ -36,7 +36,7 @@ import React, { useState, useEffect } from 'react';
             Add Hole
           </Button>
         </Box>
-        <BasicTable data={holes} onDelete={handleDelete} onEdit={handleEdit}></BasicTable>
+        <BasicTable data={holes} columns={["Hole", "Drink", "Par", "Hazard"]} onDelete={handleDelete} onEdit={handleEdit}></BasicTable>
       </section>
     </main>
   );

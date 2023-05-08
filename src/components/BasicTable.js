@@ -12,6 +12,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit'
 import { IconButton } from '@mui/material';
 import { amber } from '@mui/material/colors';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import Box from '@mui/material/Box';
 
 const StyledTable = styled(Table)({
   minWidth: 650,
@@ -25,51 +27,48 @@ const WarningIconButton = styled(IconButton)({
   color: amber["400"]
 });
 
-function BasicTable(props) {
-  const { data, onDelete, onEdit } = props;
-  const columnKeys = Object.keys(data[0]).filter((key) => key !== "id");
-
-  const titleCase = (str) => {
+const titleCase = (str) => {
     return str.replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
+
+
+function BasicTable(props) {
+  const { data, columns, onDelete, onEdit } = props;  
+
+  const createColumnObjs = (columns) => {
+    let cols = columns.map((column) => {
+      return {
+        field: column.toLowerCase(),
+        headerName: titleCase(column),
+      };
+    });
+    cols.push({field: 'actions', type: 'actions', 'getActions': (params) => [
+      <GridActionsCellItem
+        icon={<DeleteIcon />}
+        label="Delete"
+        onClick={onDelete(params.id)}
+      />,
+      <GridActionsCellItem
+        icon={<EditIcon />}
+        label="Edit"
+        onClick={onEdit(params.id)}
+        showInMenu
+      />
+    ],})
+    return cols
+  }
+
+  
+
   return (
-    <TableContainer component={Paper}>
-      <StyledTable stickyHeader aria-label="simple table">
-        <TableHead>
-        <TableRow>
-              <TableCell align="center" colSpan={columnKeys.length + 1}>
-                Course
-              </TableCell>
-            </TableRow>
-        <TableRow>
-            {columnKeys.map((columnKey) => (
-              <TableCell key={columnKey}>{titleCase(columnKey)}</TableCell>
-            ))}
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.map((row) => (
-            <TableRow key={row.id}>
-              {columnKeys.map((columnKey) => (
-                <TableCell key={`${row.id}-${columnKey}`}>
-                  {row[columnKey]}
-                </TableCell>
-              ))}
-              <TableCell>
-                <WarningIconButton aria-label='Delete Hole' onClick={() => onEdit(row.id)}>
-                  <EditIcon />
-                </WarningIconButton>
-                <IconButton color='error' aria-label='Delete Hole' onClick={() => onDelete(row.id)}>
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </StyledTable>
-    </TableContainer>
+    <Box sx={{ height: 400, width: '100%' }}>
+      <DataGrid
+      rows={data}
+      columns={createColumnObjs(columns)}
+      getRowId={row => `${row.id}`}
+      /> 
+    </Box>
   );
 }
 
