@@ -14,8 +14,8 @@ const Header = () => {
       <nav className={navOpen ? 'open' : 'nav-closed'}>
         <ul>
           <li>
-            <NavLink exact={true.toString()} to="/" onClick={() => setNavOpen(false)}>
-              Home
+            <NavLink to="/leaderboard" onClick={() => setNavOpen(false)}>
+              Leaderboard
             </NavLink>
           </li>
           <li>
@@ -24,18 +24,13 @@ const Header = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/leaderboard" onClick={() => setNavOpen(false)}>
-              Leaderboard
+            <NavLink to="/management" onClick={() => setNavOpen(false)}>
+              Management
             </NavLink>
           </li>
           <li>
             <NavLink to="/rules" onClick={() => setNavOpen(false)}>
               Rules
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/management" onClick={() => setNavOpen(false)}>
-              Management
             </NavLink>
           </li>
         </ul>

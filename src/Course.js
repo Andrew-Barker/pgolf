@@ -36,7 +36,7 @@ import React, { useState, useEffect } from 'react';
             Add Hole
           </Button>
         </Box>
-        <BasicTable data={holes} columns={["Hole", "Drink", "Par", "Hazard"]} onDelete={handleDelete} onEdit={handleEdit}></BasicTable>
+        <BasicTable data={holes} columns={["Hole", "Bar", "Drink", "Par", "Hazard"]} onDelete={handleDelete} onEdit={handleEdit}></BasicTable>
       </section>
     </main>
   );
