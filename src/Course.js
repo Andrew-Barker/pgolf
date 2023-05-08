@@ -4,19 +4,39 @@ import AddIcon from '@mui/icons-material/Add';
 import React, { useState, useEffect } from 'react';
   
 
-  const handleDelete = (id) => {
-    // Pass the id up to the parent component
-    console.log(`Hole to delete: ${id}`)
-  };
-
-  const handleEdit = (id) => {
-    // Pass the id up to the parent component
-    console.log(`Hole to edit: ${id}`)
-  };
+  
   
 
   const Course = () => {
     const [holes, setHoles] = useState([]);
+
+    const handleDelete = (id) => {
+      // Pass the id up to the parent component
+      console.log(`Hole to delete: ${id}`)
+    };
+  
+    const handleEdit = (obj) => {
+      // Pass the id up to the parent component
+      console.log(`Hole to edit: ${obj.id}`)
+      fetch(`http://localhost:3001/course/${obj.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(obj),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        console.log('Data updated successfully');
+        getData()
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        getData()
+      });
+    };
 
   useEffect(() => {
     getData();

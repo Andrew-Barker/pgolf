@@ -88,6 +88,11 @@ function BasicTable(props) {
     setOpen(false);
     setEditingRow({})
   };
+
+  const triggerEdit = () => {
+    onEdit(editingRow)
+    handleClose()
+  }
   
 
   return (
@@ -111,6 +116,12 @@ function BasicTable(props) {
           fullWidth
           variant="standard"
           value={editingRow[key]}
+          onChange={(event) =>
+            setEditingRow({
+              ...editingRow,
+              [key]: event.target.value
+            })
+          }
         />
       )
     } else {
@@ -120,7 +131,7 @@ function BasicTable(props) {
 </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={() => onEdit(editingRow.id)}>Save</Button>
+          <Button onClick={() => triggerEdit(editingRow)}>Save</Button>
         </DialogActions>
       </Dialog></>
   );
