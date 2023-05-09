@@ -65,6 +65,7 @@ function BasicTable(props) {
     onEdit,
     gridHeight = "70vh",
     footerType = "Records",
+    showActions = true
   } = props;
 
   const [teams, setTeams] = useState([]);
@@ -164,22 +165,24 @@ function BasicTable(props) {
         width: getColumnWidth(column.toLowerCase()),
       };
     });
-    cols.push({
-      field: "actions",
-      type: "actions",
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<EditIcon />}
-          label="Edit"
-          onClick={() => handleClickOpen(params.id)}
-        />,
-        <GridActionsCellItem
-          icon={<DeleteIcon />}
-          label="Delete"
-          onClick={() => onDelete(params.id)}
-        />,
-      ],
-    });
+    if (showActions) {
+      cols.push({
+        field: "actions",
+        type: "actions",
+        getActions: (params) => [
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            onClick={() => handleClickOpen(params.id)}
+          />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={() => onDelete(params.id)}
+          />,
+        ],
+      });
+    }
     return cols;
   };
 

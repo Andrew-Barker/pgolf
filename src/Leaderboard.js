@@ -1,18 +1,86 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PageTitle from './components/PageTitle';
+import BasicTable from './components/BasicTable';
+import { v4 as uuidv4 } from 'uuid';
 
-const Leaderboard = () => (
+const Leaderboard = () => {
+  const [teamScores, setTeamScores] = useState([]);
+  const teamCols = ["Team", "Score"]
+
+  const [indScores, setIndScores] = useState([]);
+  const indCols = ["Name", "Score"]
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    const response = await fetch('http://localhost:3001/scorecards');
+    const scorecardsData = await response.json();
+
+    const playersResponse = await fetch('http://localhost:3001/players');
+    const playersData = await playersResponse.json();
+
+    const currHoleResponse = await fetch('http://localhost:3001/currentHoles');
+    const currHole = await currHoleResponse.json();
+
+
+    setIndScores(rollupIndData(scorecardsData, playersData, currHole.currentHole))
+  };
+
+  const rollupIndData = (scorecardsData, playersData, currHole) => {
+    let indData = []
+    playersData.forEach((player, index) => {
+      const playerScorecards = scorecardsData.filter(scorecard => scorecard.playerId === player.id && scorecard.hole <= currHole);
+      const totalStrokes = playerScorecards.reduce((accumulator, scorecard) => accumulator + scorecard.strokes, 0);
+      indData.push({'id': index,'name': player.name, 'score': totalStrokes, 'team': player.team})
+    })
+
+    indData.sort((a, b) => a.score - b.score);
+    setTeamScores(getTeamScores(indData))
+    return indData
+  }
+
+  function getTeamScores(data) {
+    const teamScores = {};
+  
+    // Iterate through each scorecard
+    for (const scorecard of data) {
+      // If the team does not exist in the teamScores object, add it
+      if (!teamScores[scorecard.team]) {
+        teamScores[scorecard.team] = 0;
+      }
+  
+      // Add the score to the team's total
+      teamScores[scorecard.team] += scorecard.score;
+    }
+  
+    // Convert the teamScores object to an array of {id, team, score} objects
+    const teamScoresArray = Object.entries(teamScores).map(([team, score]) => ({
+      id: uuidv4(),
+      team,
+      score,
+    }));
+
+    teamScoresArray.sort((a, b) => a.score - b.score);
+    return teamScoresArray;
+  }
+  
+  
+
+  return (
   <main>
     <PageTitle title="Leaderboard"/>
     <section id="team-leaderboard">
       <h2>Team Leaderboard</h2>
-      {/* Your team leaderboard table component here */}
+      <BasicTable data={teamScores} columns={teamCols} showActions={false}/>
     </section>
     <section id="individual-leaderboard">
       <h2>Individual Leaderboard</h2>
-      {/* Your individual leaderboard table component here */}
+      <BasicTable data={indScores} columns={indCols} showActions={false}/>
     </section>
   </main>
-);
+  )
+}
 
 export default Leaderboard;
