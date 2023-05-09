@@ -65,7 +65,8 @@ function BasicTable(props) {
     onEdit,
     gridHeight = "70vh",
     footerType = "Records",
-    showActions = true
+    showActions = true,
+    showTotalFooter = true
   } = props;
 
   const [teams, setTeams] = useState([]);
@@ -105,7 +106,8 @@ function BasicTable(props) {
           borderTop: "1px solid rgba(224, 224, 224, 1)", // Add a border to match the default footer
         }}
       >
-        <div>
+        {showTotalFooter && (
+          <div>
           {/* Your custom text */}
           <p sx={{ display: "flex", alignItems: "center" }}>
             {totals.par && (
@@ -132,6 +134,7 @@ function BasicTable(props) {
             )}
           </p>
         </div>
+        )}
       </GridOverlay>
     );
   };

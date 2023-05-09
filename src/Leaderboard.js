@@ -5,10 +5,12 @@ import { v4 as uuidv4 } from 'uuid';
 
 const Leaderboard = () => {
   const [teamScores, setTeamScores] = useState([]);
-  const teamCols = ["Team", "Score"]
+  const teamCols = ["Team", "Strokes", "Score"]
 
   const [indScores, setIndScores] = useState([]);
-  const indCols = ["Name", "Score"]
+  const indCols = ["Name", "Strokes", "Score"]
+
+  const [currCourseInfo, setCurrCourseInfo] = useState({});
 
   useEffect(() => {
     getData();
@@ -24,24 +26,41 @@ const Leaderboard = () => {
     const currHoleResponse = await fetch('http://localhost:3001/currentHoles');
     const currHole = await currHoleResponse.json();
 
+    const courseResponse = await fetch('http://localhost:3001/courses');
+    const courseData = await courseResponse.json();
 
-    setIndScores(rollupIndData(scorecardsData, playersData, currHole.currentHole))
+    const summedPar = sumPar(courseData, currHole.currentHole)
+    console.log('summed par', summedPar)
+
+    setCurrCourseInfo({hole: currHole.currentHole, par: summedPar})
+
+    setIndScores(rollupIndData(scorecardsData, playersData, currHole.currentHole, summedPar))
   };
 
-  const rollupIndData = (scorecardsData, playersData, currHole) => {
+  const rollupIndData = (scorecardsData, playersData, currHole, summedPar) => {
     let indData = []
     playersData.forEach((player, index) => {
       const playerScorecards = scorecardsData.filter(scorecard => scorecard.playerId === player.id && scorecard.hole <= currHole);
       const totalStrokes = playerScorecards.reduce((accumulator, scorecard) => accumulator + scorecard.strokes, 0);
-      indData.push({'id': index,'name': player.name, 'score': totalStrokes, 'team': player.team})
+      indData.push({'id': index,'name': player.name, 'strokes': totalStrokes, score: totalStrokes-summedPar, 'team': player.team})
     })
 
     indData.sort((a, b) => a.score - b.score);
-    setTeamScores(getTeamScores(indData))
+    setTeamScores(getTeamScores(indData, summedPar))
     return indData
   }
 
-  function getTeamScores(data) {
+  const sumPar = (courses, currHole) => {
+    return courses.reduce((acc, course) => {
+      if (course.hole <= currHole) {
+        return acc + parseInt(course.par);
+      }
+      return acc;
+    }, 0);
+  };
+  
+
+  function getTeamScores(data, summedPar) {
     const teamScores = {};
   
     // Iterate through each scorecard
@@ -52,17 +71,19 @@ const Leaderboard = () => {
       }
   
       // Add the score to the team's total
-      teamScores[scorecard.team] += scorecard.score;
+      teamScores[scorecard.team] += scorecard.strokes;
     }
   
     // Convert the teamScores object to an array of {id, team, score} objects
-    const teamScoresArray = Object.entries(teamScores).map(([team, score]) => ({
+    const teamScoresArray = Object.entries(teamScores).map(([team, strokes]) => ({
       id: uuidv4(),
       team,
-      score,
+      strokes,
+      score: strokes - (summedPar*2),
     }));
 
     teamScoresArray.sort((a, b) => a.score - b.score);
+    console.log('team scores', teamScoresArray)
     return teamScoresArray;
   }
   
@@ -71,13 +92,17 @@ const Leaderboard = () => {
   return (
   <main>
     <PageTitle title="Leaderboard"/>
+    <section id="course-info">
+      {currCourseInfo.hole && (<p><strong>Hole: {currCourseInfo.hole}</strong></p>)}
+      {currCourseInfo.par && (<p><strong>Par: {currCourseInfo.par}</strong></p>)}
+    </section>
     <section id="team-leaderboard">
       <h2>Team Leaderboard</h2>
-      <BasicTable data={teamScores} columns={teamCols} showActions={false} gridHeight="34vh"/>
+      <BasicTable data={teamScores} columns={teamCols} showActions={false} gridHeight="34vh" showTotalFooter={false}/>
     </section>
     <section id="individual-leaderboard">
       <h2>Individual Leaderboard</h2>
-      <BasicTable data={indScores} columns={indCols} showActions={false} gridHeight="45vh"/>
+      <BasicTable data={indScores} columns={indCols} showActions={false} gridHeight="45vh" showTotalFooter={false}/>
     </section>
   </main>
   )

@@ -1,6 +1,6 @@
 {
   "currentHoles": {
-    "currentHole": 4
+    "currentHole": 1
   },
   "courses": [
     {
@@ -123,7 +123,7 @@
       "id": 1,
       "playerId": "ZwrbcpHl9jaJuEnChaTFStTZrtC3",
       "hole": "1",
-      "strokes": 4,
+      "strokes": 3,
       "penalty": "Water hazard"
     },
     {
