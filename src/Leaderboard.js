@@ -73,11 +73,11 @@ const Leaderboard = () => {
     <PageTitle title="Leaderboard"/>
     <section id="team-leaderboard">
       <h2>Team Leaderboard</h2>
-      <BasicTable data={teamScores} columns={teamCols} showActions={false}/>
+      <BasicTable data={teamScores} columns={teamCols} showActions={false} gridHeight="34vh"/>
     </section>
     <section id="individual-leaderboard">
       <h2>Individual Leaderboard</h2>
-      <BasicTable data={indScores} columns={indCols} showActions={false}/>
+      <BasicTable data={indScores} columns={indCols} showActions={false} gridHeight="45vh"/>
     </section>
   </main>
   )
