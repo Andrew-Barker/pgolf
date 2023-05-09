@@ -1,6 +1,6 @@
 {
   "currentHoles": {
-    "currentHole": 9
+    "currentHole": 4
   },
   "courses": [
     {
@@ -78,7 +78,7 @@
   ],
   "players": [
     {
-      "id": 1,
+      "id": "ZwrbcpHl9jaJuEnChaTFStTZrtC3",
       "name": "Natey C",
       "team": "Drunkees"
     },
@@ -121,21 +121,21 @@
   "scorecards": [
     {
       "id": 1,
-      "playerId": 1,
+      "playerId": "ZwrbcpHl9jaJuEnChaTFStTZrtC3",
       "hole": "1",
       "strokes": 4,
       "penalty": "Water hazard"
     },
     {
       "id": 2,
-      "playerId": 1,
+      "playerId": "ZwrbcpHl9jaJuEnChaTFStTZrtC3",
       "hole": "2",
       "strokes": 3,
       "penalty": ""
     },
     {
       "id": 3,
-      "playerId": 1,
+      "playerId": "ZwrbcpHl9jaJuEnChaTFStTZrtC3",
       "hole": "3",
       "strokes": 5,
       "penalty": ""
@@ -163,42 +163,42 @@
     },
     {
       "id": 7,
-      "playerId": 1,
+      "playerId": "ZwrbcpHl9jaJuEnChaTFStTZrtC3",
       "hole": "4",
       "strokes": 4,
       "penalty": ""
     },
     {
       "id": 8,
-      "playerId": 1,
+      "playerId": "ZwrbcpHl9jaJuEnChaTFStTZrtC3",
       "hole": "5",
       "strokes": 3,
       "penalty": ""
     },
     {
       "id": 9,
-      "playerId": 1,
+      "playerId": "ZwrbcpHl9jaJuEnChaTFStTZrtC3",
       "hole": "6",
       "strokes": 5,
       "penalty": ""
     },
     {
       "id": 10,
-      "playerId": 1,
+      "playerId": "ZwrbcpHl9jaJuEnChaTFStTZrtC3",
       "hole": "7",
       "strokes": 4,
       "penalty": ""
     },
     {
       "id": 11,
-      "playerId": 1,
+      "playerId": "ZwrbcpHl9jaJuEnChaTFStTZrtC3",
       "hole": "8",
       "strokes": 3,
       "penalty": ""
     },
     {
       "id": 12,
-      "playerId": 1,
+      "playerId": "ZwrbcpHl9jaJuEnChaTFStTZrtC3",
       "hole": "9",
       "strokes": 5,
       "penalty": ""

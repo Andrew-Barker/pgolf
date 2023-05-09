@@ -17,13 +17,6 @@ const Header = () => {
       setIsAdmin(adminStatus);
     });
   }, [auth.currentUser]);
-  
-
-  // getClaims(auth).then((result) => {setIsAdmin(result)});
-
-    // useEffect(() => {
-    //   getClaims(auth);
-    // }, [auth]);
 
   const handleSignOut = () => {
     signOut(auth)
@@ -34,7 +27,7 @@ const Header = () => {
 
   return (
     <header>
-      <h1>Pub Golf</h1>
+      <h1 onClick={() => window.location.href = '/'}>Pub Golf</h1>
       <button className="hamburger" onClick={() => setNavOpen(!navOpen)}>
         &#9776;
       </button>

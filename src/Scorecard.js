@@ -2,6 +2,8 @@ import React, { useState, useEffect }  from 'react';
 import BasicTable from './components/BasicTable';
 import PlayersDropdown from './components/inputs/PlayersDropdown';
 import PageTitle from './components/PageTitle';
+import { getAuth } from "firebase/auth";
+import { getClaims } from "./utils/helper";
 
 function mergeCourseData(scorecards, courses) {
     return scorecards.map((scorecard) => {
@@ -20,6 +22,31 @@ const [currHole, setCurrHole] = useState([]);
 const [players, setPlayers] = useState([]);
 const [selectedPlayerId, setSelectedPlayerId] = useState('');
 const cols = ["Hole", "Par", "Strokes", "Penalty"]
+const [isAdmin, setIsAdmin] = useState(false);
+const [authUpdated, setAuthUpdated] = useState(false);
+  const auth = getAuth();
+
+  
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+
+        getClaims(auth).then((adminStatus) => {
+          console.log("admin status", adminStatus, auth?.currentUser);
+          setIsAdmin(adminStatus);
+          if (!isAdmin || isAdmin === false) {
+            getData(user.uid);
+          } else {
+            setSelectedPlayerId(players[0].id)
+          }
+        });
+      }
+    });
+    return () => unsubscribe();
+  }, [auth]);
+  
+  
 
 const handleDelete = (id) => {
     // console.log('delete', id)
@@ -34,11 +61,14 @@ const getData = async (playerId) => {
     const courseData = await courseResponse.json();
 
     const scoreResponse = await fetch(`http://localhost:3001/scorecards?playerId=${playerId}`);
-    const scoreData = await scoreResponse.json();
+    let scoreData = await scoreResponse.json();
 
-    const filteredScoreData = scoreData.filter((score) => score.hole <= currHole);
+    if(!isAdmin){
+      scoreData = scoreData.filter((score) => score.hole <= currHole);
+    }
 
-    const mergedData = mergeCourseData(filteredScoreData, courseData);
+
+    const mergedData = mergeCourseData(scoreData, courseData);
 
     setData(mergedData);
   };
@@ -60,8 +90,16 @@ const getData = async (playerId) => {
   };
 
 useEffect(() => {
+  if(selectedPlayerId){
     getData(selectedPlayerId)
+  }
 }, [selectedPlayerId])
+
+// useEffect(() => {
+//   if(!isAdmin && auth.currentUser){
+//     getData(auth.currentUser.uid)
+//   }
+// }, [isAdmin])
 
 useEffect(() => {
     getPlayers()
@@ -72,11 +110,13 @@ useEffect(() => {
     <section id="scorecard">
     <PageTitle title="Scorecard"/>
       <h2>Scorecard</h2>
-      <PlayersDropdown
+      {isAdmin && (
+        <PlayersDropdown
         players={players}
         value={selectedPlayerId}
         onChange={handlePlayerChange}
       />
+      )}
       <BasicTable data={data} columns={cols} onDelete={handleDelete} onEdit={handleEdit}></BasicTable>
     </section>
   </main>)
