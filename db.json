@@ -1,4 +1,7 @@
 {
+  "currentHoles": {
+    "currentHole": 2
+  },
   "courses": [
     {
       "id": "1",
@@ -79,6 +82,72 @@
       "par": "8",
       "hazard": "",
       "id": "cZi5e6x"
+    }
+  ],
+  "players": [
+    {
+      "id": 1,
+      "name": "Natey C",
+      "team": "Drunkees"
+    },
+    {
+      "id": 2,
+      "name": "Captain Morgan",
+      "team": "Team 2"
+    }
+  ],
+  "scorecards": [
+    {
+      "id": 1,
+      "playerId": 1,
+      "hole": "1",
+      "strokes": 4,
+      "penalty": "Water hazard"
+    },
+    {
+      "id": 2,
+      "playerId": 1,
+      "hole": "2",
+      "strokes": 3,
+      "penalty": ""
+    },
+    {
+      "id": 3,
+      "playerId": 1,
+      "hole": "3",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 4,
+      "playerId": 2,
+      "hole": "1",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 5,
+      "playerId": 2,
+      "hole": "2",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 6,
+      "playerId": 2,
+      "hole": "3",
+      "strokes": 3,
+      "penalty": ""
+    }
+  ],
+  "teams": [
+    {
+      "id": 1,
+      "name": "Drunkees"
+    },
+    {
+      "id": 2,
+      "name": "Team 2"
     }
   ]
 }

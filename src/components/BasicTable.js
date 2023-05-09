@@ -10,7 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit'
 import { IconButton } from '@mui/material';
 import { amber } from '@mui/material/colors';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, GridOverlay, GridToolbarContainer, GridPagination } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -28,28 +28,85 @@ const StyledTable = styled(Table)({
 const WarningIconButton = styled(IconButton)({
   color: amber["400"]
 });
+
+const getTotals = (data) => {
+  let totals = {};
+  
+  if(data && data.length > 0 ) {
+    const keys = Object.keys(data[0]);
+    keys.forEach((key) => {
+      if(key.toLowerCase() === 'par') {
+        totals.par = data.reduce((total, obj) => {
+          return total + parseInt(obj[key]);
+        }, 0);
+      }
+      if(key.toLowerCase() === 'strokes') {
+        totals.strokes = data.reduce((total, obj) => {
+          return total + parseInt(obj[key]);
+        }, 0);
+      }
+    });
+  }
+  
+  return totals;
+}
+
   
 
 function BasicTable(props) {
-  const { data, columns, onDelete, onEdit } = props;  
+  const { data, columns, onDelete, onEdit } = props; 
+
+  const CustomFooter = (props) => {
+    const { data } = props;
+    const totals = getTotals(data)
+    return (
+      <GridOverlay style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 52, // Adjust the height to match the default footer height
+        borderTop: '1px solid rgba(224, 224, 224, 1)', // Add a border to match the default footer
+      }}>
+        <div >
+          {/* Your custom text */}
+          <p>
+          <Box sx={{ mr: 2 }}>
+    {totals.par && (
+      <span className="my-class">
+        <strong>Total Par: {totals.par}</strong>
+      </span>
+    )}
+  </Box>
+  <Box>
+    {totals.strokes && (
+      <span className="my-class">
+        <strong>Total Strokes: {totals.strokes}</strong>
+      </span>
+    )}
+  </Box>
+          </p>
+        </div>
+      </GridOverlay>
+    );
+  };
+
 
   const getColumnWidth = (columnName) => {
-    if(data && data.length > 0 ) {
+    if (data && data.length > 0) {
       const columnData = data.map((row) => row[columnName]);
   
-      const longest = columnData.reduce((a, b) => {
-        a = a || '';
-        b = b || '';
+      const longestValue = columnData.reduce((a, b) => {
         return a.toString().length > b.toString().length ? a.toString() : b.toString();
       });
   
-      const width = longest.length * 8; // assuming 8 pixels per character
+      const maxLength = Math.max(longestValue.toString().length, columnName.toString().length);
   
-      return width.toString();
+      return maxLength * 10; // assuming 10 pixels per character
     } else {
-      return '75'
+      return 75;
     }
-  }
+  };
+  
   
 
   const createColumnObjs = (columns) => {
@@ -93,14 +150,19 @@ function BasicTable(props) {
     onEdit(editingRow)
     handleClose()
   }
-  
 
   return (
     <><Box sx={{ height: '70vh', width: '100%' }}>
       <DataGrid
         rows={data}
         columns={createColumnObjs(columns)}
-        getRowId={row => `${row.id}`} />
+        getRowId={row => `${row.id}`} 
+        hideFooterSelectedRowCount
+        components={{
+          Toolbar: GridToolbarContainer,
+          Footer: () => (<CustomFooter data={data} />)
+        }}
+        />
     </Box>
     <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{editingRow?.bar}</DialogTitle>

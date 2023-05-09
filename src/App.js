@@ -4,12 +4,13 @@ import Home from './Home';
 import Course from './Course';
 import Leaderboard from './Leaderboard';
 import Rules from './Rules';
-import Management from './Management';
+import Players from './Players';
 import Header from './Header';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import Scorecard from './Scorecard';
 
 
 function App() {
@@ -22,7 +23,8 @@ function App() {
           <Route path="/course" element={<Course />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/rules" element={<Rules />} />
-          <Route path="/management" element={<Management />} />
+          <Route path="/players" element={<Players />} />
+          <Route path="/scorecard" element={<Scorecard />} />
         </Routes>
       </div>
     </Router>

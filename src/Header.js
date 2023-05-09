@@ -19,13 +19,18 @@ const Header = () => {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/scorecard" onClick={() => setNavOpen(false)}>
+              Scorecard
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/course" onClick={() => setNavOpen(false)}>
               Course
             </NavLink>
           </li>
           <li>
-            <NavLink to="/management" onClick={() => setNavOpen(false)}>
-              Management
+            <NavLink to="/players" onClick={() => setNavOpen(false)}>
+              Players
             </NavLink>
           </li>
           <li>
