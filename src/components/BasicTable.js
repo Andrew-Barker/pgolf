@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Table from "@mui/material/Table";
 import Dialog from "@mui/material/Dialog";
@@ -21,6 +21,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { titleCase } from "../utils/helper";
+import TeamsDropdown from "./inputs/TeamsDropdown";
 
 const StyledTable = styled(Table)({
   minWidth: 650,
@@ -57,7 +58,38 @@ const getTotals = (data) => {
 };
 
 function BasicTable(props) {
-  const { data, columns, onDelete, onEdit, gridHeight = '70vh', footerType = 'Records' } = props;
+  const {
+    data,
+    columns,
+    onDelete,
+    onEdit,
+    gridHeight = "70vh",
+    footerType = "Records",
+  } = props;
+
+  const [teams, setTeams] = useState([]);
+  const [selectedTeamName, setSelectedTeamName] = useState("");
+
+  const getTeams = async () => {
+    const response = await fetch("http://localhost:3001/teams");
+    const data = await response.json();
+    setTeams(data);
+  };
+
+  const handleTeamChange = (event) => {
+    setSelectedTeamName(event.target.value);
+  };
+
+  useEffect(() => {
+    setEditingRow({
+      ...editingRow,
+      ["team"]: selectedTeamName,
+    });
+  }, [selectedTeamName]);
+
+  useEffect(() => {
+    getTeams()
+  }, []);
 
   const CustomFooter = (props) => {
     const { data } = props;
@@ -74,32 +106,30 @@ function BasicTable(props) {
       >
         <div>
           {/* Your custom text */}
-          <p sx={{ display: 'flex', alignItems: 'center' }}>
-  {totals.par && (
-    <Box component="span" marginRight={2}>
-      <strong>Total Par: {totals.par}</strong>
-    </Box>
-  )}
-  {totals.strokes && (
-    <Box component="span" marginRight={2}>
-      <strong>Total Strokes: {totals.strokes}</strong>
-    </Box>
-  )}
-  {totals.strokes && totals.par && (
-    <Box component="span" marginRight={2}>
-      <strong>Total Score: {totals.strokes - totals.par}</strong>
-    </Box>
-  )}
-  {footerType !== 'Records' && (
-    <Box component="span" marginRight={2}>
-      <strong>{data.length} {footerType}</strong>
-    </Box>
-  )}
-</p>
-
-
-
-
+          <p sx={{ display: "flex", alignItems: "center" }}>
+            {totals.par && (
+              <Box component="span" marginRight={2}>
+                <strong>Total Par: {totals.par}</strong>
+              </Box>
+            )}
+            {totals.strokes && (
+              <Box component="span" marginRight={2}>
+                <strong>Total Strokes: {totals.strokes}</strong>
+              </Box>
+            )}
+            {totals.strokes && totals.par && (
+              <Box component="span" marginRight={2}>
+                <strong>Total Score: {totals.strokes - totals.par}</strong>
+              </Box>
+            )}
+            {footerType !== "Records" && (
+              <Box component="span" marginRight={2}>
+                <strong>
+                  {data.length} {footerType}
+                </strong>
+              </Box>
+            )}
+          </p>
         </div>
       </GridOverlay>
     );
@@ -186,10 +216,13 @@ function BasicTable(props) {
         />
       </Box>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{editingRow?.bar}</DialogTitle>
+        <DialogTitle>
+          {editingRow?.bar}
+          {editingRow?.name}
+        </DialogTitle>
         <DialogContent>
           {Object.entries(editingRow).map(([key]) => {
-            if (key !== "id") {
+            if (key !== "id" && key !== 'team') {
               return (
                 <TextField
                   key={key}
@@ -208,6 +241,12 @@ function BasicTable(props) {
                   }
                 />
               );
+            } else if (key === "team" && teams.length > 0) {
+              return (<TeamsDropdown
+                teams={teams}
+                value={editingRow[key]}
+                onChange={handleTeamChange}
+              />)
             } else {
               return null;
             }

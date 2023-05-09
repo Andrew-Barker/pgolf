@@ -4,7 +4,7 @@ import { MenuItem, FormControl, Select } from '@mui/material';
 
 function PlayersDropdown(props) {
   const { players, value, onChange } = props;
-  console.log('players dd', players)
+  // console.log('players dd', players)
 
   return (
     <FormControl fullWidth>

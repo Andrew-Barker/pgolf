@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from "react";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -8,6 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { titleCase } from '../utils/helper';
+import TeamsDropdown from "./inputs/TeamsDropdown";
 
 function convertKeysToLower(obj) {
     const newObj = {};
@@ -23,8 +24,32 @@ function AddData(props) {
     const [open, setOpen] = React.useState(false);
     const [addRow, setAddRow] = React.useState({});
 
+    const [teams, setTeams] = useState([]);
+    const [selectedTeamName, setSelectedTeamName] = useState("");
+
+  const getTeams = async () => {
+    const response = await fetch("http://localhost:3001/teams");
+    const data = await response.json();
+    setTeams(data);
+  };
+
+  const handleTeamChange = (event) => {
+    setSelectedTeamName(event.target.value);
+  };
+
+  useEffect(() => {
+    setAddRow({
+      ...addRow,
+      ["team"]: selectedTeamName,
+    });
+  }, [selectedTeamName]);
+
+  useEffect(() => {
+    getTeams()
+  }, []);
+
     const defineEmptyFormVals = () => {
-        return fields.reduce((obj, key) => ({ ...obj, [key]: '' }), {});
+        return fields.reduce((obj, key) => ({ ...obj, [key.toLowerCase()]: '' }), {});
     }
 
     const handleClickOpen = () => {
@@ -64,7 +89,14 @@ function AddData(props) {
               <DialogTitle>Add New {title}</DialogTitle>
               <DialogContent>
                   {Object.entries(addRow).map(([key]) => {
-                      if (key !== 'id') {
+                    console.log('add keys', key, teams, addRow)
+                    if (key === "team" && teams.length > 0) {
+                      return (<TeamsDropdown
+                        teams={teams}
+                        value={addRow[key]}
+                        onChange={handleTeamChange}
+                      />)
+                    } else if (key !== 'id' && key !== 'team') {
                           return (
                               <TextField
                                   key={key.toLowerCase()}

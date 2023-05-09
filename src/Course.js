@@ -10,12 +10,11 @@ import PageTitle from './components/PageTitle';
 
     const handleDelete = (id) => {
       // Pass the id up to the parent component
-      console.log(`Hole to delete: ${id}`)
+      // console.log(`Hole to delete: ${id}`)
     };
   
     const handleEdit = (obj) => {
       // Pass the id up to the parent component
-      console.log(`Hole to edit: ${obj.id}`)
       fetch(`http://localhost:3001/courses/${obj.id}`, {
       method: 'PUT',
       headers: {
@@ -27,7 +26,6 @@ import PageTitle from './components/PageTitle';
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        console.log('Data updated successfully');
         getData()
       })
       .catch((error) => {

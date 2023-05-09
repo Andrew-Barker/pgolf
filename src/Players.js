@@ -12,9 +12,8 @@ const Players = () => {
 
 const handlePlayersDelete = async (id) => {
   try {
-    await deleteData('teams', id);
+    await deleteData('players', id);
     getData()
-    console.log('Data deleted successfully!');
   } catch (error) {
     console.error(error);
   }
@@ -24,14 +23,49 @@ const handleTeamsDelete = async (id) => {
   try {
     await deleteData('teams', id);
     getTeamData()
-    console.log('Data deleted successfully!');
   } catch (error) {
     console.error(error);
   }
 }
 
-const handleEdit = (obj) => {
-    console.log('edit', obj.id)
+const handlePlayersEdit = (obj) => {
+  fetch(`http://localhost:3001/players/${obj.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(obj),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      getData()
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      getData()
+    });
+}
+
+const handleTeamEdit = (obj) => {
+  fetch(`http://localhost:3001/teams/${obj.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(obj),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        getTeamData()
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        getTeamData()
+      });
 }
 
 const getData = async () => {
@@ -56,11 +90,11 @@ useEffect(() => {
     <section id="players">
       <PageTitle title="Players"/>
       <h2>Players</h2>
-      <AddData title={'Hole'} endpoint={"courses"} fields={cols} onAdd={getData}/>
-      <BasicTable data={data} columns={cols} onDelete={handlePlayersDelete} onEdit={handleEdit} gridHeight="35vh" footerType="Players"></BasicTable>
+      <AddData title={'Player'} endpoint={"players"} fields={cols} onAdd={getData}/>
+      <BasicTable data={data} columns={cols} onDelete={handlePlayersDelete} onEdit={handlePlayersEdit} gridHeight="35vh" footerType="Players"></BasicTable>
       <h2>Teams</h2>
       <AddData title={'Team'} endpoint={"teams"} fields={teamCols} onAdd={getTeamData}/>
-      <BasicTable data={teamData} columns={teamCols} onDelete={handleTeamsDelete} onEdit={handleEdit} gridHeight="35vh" footerType="Teams"></BasicTable>
+      <BasicTable data={teamData} columns={teamCols} onDelete={handleTeamsDelete} onEdit={handleTeamEdit} gridHeight="35vh" footerType="Teams"></BasicTable>
     </section>
   </main>)
 };

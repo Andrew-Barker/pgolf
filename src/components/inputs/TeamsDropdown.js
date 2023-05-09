@@ -4,7 +4,7 @@ import { MenuItem, FormControl, Select } from '@mui/material';
 
 function TeamsDropdown(props) {
   const { teams, value, onChange } = props;
-  console.log('teams dd', teams)
+  console.log('teams dd', teams, value)
 
   return (
     <FormControl fullWidth>
@@ -13,7 +13,7 @@ function TeamsDropdown(props) {
         onChange={onChange}
       >
         {teams.map((team) => (
-          <MenuItem key={team.id} value={team.id}>{team.name}</MenuItem>
+          <MenuItem key={team.id} value={team.name}>{team.name}</MenuItem>
         ))}
       </Select>
     </FormControl>

@@ -22,11 +22,11 @@ const [selectedPlayerId, setSelectedPlayerId] = useState('');
 const cols = ["Hole", "Par", "Strokes", "Penalty"]
 
 const handleDelete = (id) => {
-    console.log('delete', id)
+    // console.log('delete', id)
 }
 
 const handleEdit = (obj) => {
-    console.log('delete', obj.id)
+    // console.log('delete', obj.id)
 }
 
 const getData = async (playerId) => {
