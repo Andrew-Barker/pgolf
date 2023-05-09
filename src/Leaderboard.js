@@ -1,7 +1,9 @@
 import React from 'react';
+import PageTitle from './components/PageTitle';
 
 const Leaderboard = () => (
   <main>
+    <PageTitle title="Leaderboard"/>
     <section id="individual-leaderboard">
       <h2>Individual Leaderboard</h2>
       {/* Your individual leaderboard table component here */}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect }  from 'react';
 import BasicTable from './components/BasicTable';
 import PlayersDropdown from './components/inputs/PlayersDropdown';
+import PageTitle from './components/PageTitle';
 
 function mergeCourseData(scorecards, courses) {
     return scorecards.map((scorecard) => {
@@ -69,6 +70,7 @@ useEffect(() => {
 
   return (<main>
     <section id="scorecard">
+    <PageTitle title="Scorecard"/>
       <h2>Scorecard</h2>
       <PlayersDropdown
         players={players}

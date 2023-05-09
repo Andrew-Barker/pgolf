@@ -1,7 +1,9 @@
 import React from 'react';
+import PageTitle from './components/PageTitle';
 
 const Rules = () => (
   <main>
+    <PageTitle title="Rules"/>
     <section id="rules">
     <h1>Pub Golf Rules</h1>
     <ol>

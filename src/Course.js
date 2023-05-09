@@ -1,6 +1,7 @@
 import BasicTable from './components/BasicTable';
 import React, { useState, useEffect } from 'react';
 import AddData from './components/AddData';
+import PageTitle from './components/PageTitle';
   
 
   const Course = () => {
@@ -46,6 +47,7 @@ import AddData from './components/AddData';
   };
   return (
     <main>
+      <PageTitle title="Course Details"/>
       <section id="course">
         <h2>Course</h2>
         <AddData title={'Hole'} endpoint={"courses"} fields={cols} onAdd={getData}/>

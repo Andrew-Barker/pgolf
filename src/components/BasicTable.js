@@ -57,7 +57,7 @@ const getTotals = (data) => {
 };
 
 function BasicTable(props) {
-  const { data, columns, onDelete, onEdit } = props;
+  const { data, columns, onDelete, onEdit, gridHeight = '70vh', footerType = 'Records' } = props;
 
   const CustomFooter = (props) => {
     const { data } = props;
@@ -88,6 +88,11 @@ function BasicTable(props) {
   {totals.strokes && totals.par && (
     <Box component="span" marginRight={2}>
       <strong>Total Score: {totals.strokes - totals.par}</strong>
+    </Box>
+  )}
+  {footerType !== 'Records' && (
+    <Box component="span" marginRight={2}>
+      <strong>{data.length} {footerType}</strong>
     </Box>
   )}
 </p>
@@ -168,7 +173,7 @@ function BasicTable(props) {
 
   return (
     <>
-      <Box sx={{ height: "70vh", width: "100%" }}>
+      <Box sx={{ height: gridHeight, width: "100%" }}>
         <DataGrid
           rows={data}
           columns={createColumnObjs(columns)}
