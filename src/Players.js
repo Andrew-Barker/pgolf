@@ -2,6 +2,7 @@ import React, { useState, useEffect }  from 'react';
 import BasicTable from './components/BasicTable';
 import PageTitle from './components/PageTitle';
 import AddData from './components/AddData';
+import { deleteData } from './utils/helper';
 
 const Players = () => {
   const [data, setData] = useState([]);
@@ -9,8 +10,24 @@ const Players = () => {
   const teamCols = ["Name"]
   const [teamData, setTeamData] = useState([]);
 
-const handleDelete = (id) => {
-    console.log('delete', id)
+const handlePlayersDelete = async (id) => {
+  try {
+    await deleteData('teams', id);
+    getData()
+    console.log('Data deleted successfully!');
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const handleTeamsDelete = async (id) => {
+  try {
+    await deleteData('teams', id);
+    getTeamData()
+    console.log('Data deleted successfully!');
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 const handleEdit = (obj) => {
@@ -29,6 +46,7 @@ const getTeamData = async () => {
     setTeamData(data);
 }
 
+
 useEffect(() => {
     getData();
     getTeamData()
@@ -39,10 +57,10 @@ useEffect(() => {
       <PageTitle title="Players"/>
       <h2>Players</h2>
       <AddData title={'Hole'} endpoint={"courses"} fields={cols} onAdd={getData}/>
-      <BasicTable data={data} columns={cols} onDelete={handleDelete} onEdit={handleEdit} gridHeight="35vh" footerType="Players"></BasicTable>
+      <BasicTable data={data} columns={cols} onDelete={handlePlayersDelete} onEdit={handleEdit} gridHeight="35vh" footerType="Players"></BasicTable>
       <h2>Teams</h2>
       <AddData title={'Team'} endpoint={"teams"} fields={teamCols} onAdd={getTeamData}/>
-      <BasicTable data={teamData} columns={teamCols} onDelete={handleDelete} onEdit={handleEdit} gridHeight="35vh" footerType="Teams"></BasicTable>
+      <BasicTable data={teamData} columns={teamCols} onDelete={handleTeamsDelete} onEdit={handleEdit} gridHeight="35vh" footerType="Teams"></BasicTable>
     </section>
   </main>)
 };
