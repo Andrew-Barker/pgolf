@@ -10,6 +10,10 @@ const Players = () => {
   const teamCols = ["Name"]
   const [teamData, setTeamData] = useState([]);
 
+const updatePlayersTeamName = (prevTeamName) => {
+  console.log('previous team name')
+}
+
 const handlePlayersDelete = async (id) => {
   try {
     await deleteData('players', id);

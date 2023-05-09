@@ -1,6 +1,6 @@
 {
   "currentHoles": {
-    "currentHole": 2
+    "currentHole": 6
   },
   "courses": [
     {
@@ -74,14 +74,6 @@
       "drink": "Long Island Iced Tea",
       "par": "5",
       "hazard": "Spin the Wheel Shot"
-    },
-    {
-      "hole": "10",
-      "bar": "Paddy's Pub",
-      "drink": "Piss Water",
-      "par": "8",
-      "hazard": "",
-      "id": "cZi5e6x"
     }
   ],
   "players": [
@@ -93,7 +85,37 @@
     {
       "id": 2,
       "name": "Captain Morgan",
-      "team": "Team 2"
+      "team": "Tipsy Tees"
+    },
+    {
+      "id": 3,
+      "name": "Jane Doe",
+      "team": "Drunkees"
+    },
+    {
+      "id": 4,
+      "name": "Jack Daniels",
+      "team": "Tipsy Tees"
+    },
+    {
+      "id": 5,
+      "name": "Olivia Newton",
+      "team": "Boozy Birdies"
+    },
+    {
+      "id": 6,
+      "name": "James Beam",
+      "team": "Boozy Birdies"
+    },
+    {
+      "id": 7,
+      "name": "Samantha Collins",
+      "team": "Mulligan Maniacs"
+    },
+    {
+      "id": 8,
+      "name": "Johnnie Walker",
+      "team": "Mulligan Maniacs"
     }
   ],
   "scorecards": [
@@ -138,16 +160,474 @@
       "hole": "3",
       "strokes": 3,
       "penalty": ""
+    },
+    {
+      "id": 7,
+      "playerId": 1,
+      "hole": "4",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 8,
+      "playerId": 1,
+      "hole": "5",
+      "strokes": 3,
+      "penalty": ""
+    },
+    {
+      "id": 9,
+      "playerId": 1,
+      "hole": "6",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 10,
+      "playerId": 1,
+      "hole": "7",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 11,
+      "playerId": 1,
+      "hole": "8",
+      "strokes": 3,
+      "penalty": ""
+    },
+    {
+      "id": 12,
+      "playerId": 1,
+      "hole": "9",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 13,
+      "playerId": 2,
+      "hole": "4",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 14,
+      "playerId": 2,
+      "hole": "5",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 15,
+      "playerId": 2,
+      "hole": "6",
+      "strokes": 6,
+      "penalty": ""
+    },
+    {
+      "id": 16,
+      "playerId": 2,
+      "hole": "7",
+      "strokes": 3,
+      "penalty": ""
+    },
+    {
+      "id": 17,
+      "playerId": 2,
+      "hole": "8",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 18,
+      "playerId": 2,
+      "hole": "9",
+      "strokes": 6,
+      "penalty": ""
+    },
+    {
+      "id": 19,
+      "playerId": 3,
+      "hole": "1",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 20,
+      "playerId": 3,
+      "hole": "2",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 21,
+      "playerId": 3,
+      "hole": "3",
+      "strokes": 6,
+      "penalty": ""
+    },
+    {
+      "id": 22,
+      "playerId": 3,
+      "hole": "4",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 23,
+      "playerId": 3,
+      "hole": "5",
+      "strokes": 3,
+      "penalty": ""
+    },
+    {
+      "id": 24,
+      "playerId": 3,
+      "hole": "6",
+      "strokes": 6,
+      "penalty": ""
+    },
+    {
+      "id": 25,
+      "playerId": 3,
+      "hole": "7",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 26,
+      "playerId": 3,
+      "hole": "8",
+      "strokes": 3,
+      "penalty": ""
+    },
+    {
+      "id": 27,
+      "playerId": 3,
+      "hole": "9",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 28,
+      "playerId": 4,
+      "hole": "1",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 29,
+      "playerId": 4,
+      "hole": "2",
+      "strokes": 3,
+      "penalty": ""
+    },
+    {
+      "id": 30,
+      "playerId": 4,
+      "hole": "3",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 31,
+      "playerId": 4,
+      "hole": "4",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 32,
+      "playerId": 4,
+      "hole": "5",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 33,
+      "playerId": 4,
+      "hole": "6",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 34,
+      "playerId": 4,
+      "hole": "7",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 35,
+      "playerId": 4,
+      "hole": "8",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 36,
+      "playerId": 4,
+      "hole": "9",
+      "strokes": 6,
+      "penalty": ""
+    },
+    {
+      "id": 37,
+      "playerId": 5,
+      "hole": "1",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 38,
+      "playerId": 5,
+      "hole": "2",
+      "strokes": 3,
+      "penalty": ""
+    },
+    {
+      "id": 39,
+      "playerId": 5,
+      "hole": "3",
+      "strokes": 7,
+      "penalty": ""
+    },
+    {
+      "id": 40,
+      "playerId": 5,
+      "hole": "4",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 41,
+      "playerId": 5,
+      "hole": "5",
+      "strokes": 3,
+      "penalty": ""
+    },
+    {
+      "id": 42,
+      "playerId": 5,
+      "hole": "6",
+      "strokes": 6,
+      "penalty": ""
+    },
+    {
+      "id": 43,
+      "playerId": 5,
+      "hole": "7",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 44,
+      "playerId": 5,
+      "hole": "8",
+      "strokes": 2,
+      "penalty": ""
+    },
+    {
+      "id": 45,
+      "playerId": 5,
+      "hole": "9",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 46,
+      "playerId": 6,
+      "hole": "1",
+      "strokes": 6,
+      "penalty": ""
+    },
+    {
+      "id": 47,
+      "playerId": 6,
+      "hole": "2",
+      "strokes": 3,
+      "penalty": ""
+    },
+    {
+      "id": 48,
+      "playerId": 6,
+      "hole": "3",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 49,
+      "playerId": 6,
+      "hole": "4",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 50,
+      "playerId": 6,
+      "hole": "5",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 51,
+      "playerId": 6,
+      "hole": "6",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 52,
+      "playerId": 6,
+      "hole": "7",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 53,
+      "playerId": 6,
+      "hole": "8",
+      "strokes": 3,
+      "penalty": ""
+    },
+    {
+      "id": 54,
+      "playerId": 6,
+      "hole": "9",
+      "strokes": 7,
+      "penalty": ""
+    },
+    {
+      "id": 55,
+      "playerId": 7,
+      "hole": "1",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 56,
+      "playerId": 7,
+      "hole": "2",
+      "strokes": 3,
+      "penalty": ""
+    },
+    {
+      "id": 57,
+      "playerId": 7,
+      "hole": "3",
+      "strokes": 6,
+      "penalty": ""
+    },
+    {
+      "id": 58,
+      "playerId": 7,
+      "hole": "4",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 59,
+      "playerId": 7,
+      "hole": "5",
+      "strokes": 2,
+      "penalty": ""
+    },
+    {
+      "id": 60,
+      "playerId": 7,
+      "hole": "6",
+      "strokes": 7,
+      "penalty": ""
+    },
+    {
+      "id": 61,
+      "playerId": 7,
+      "hole": "7",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 62,
+      "playerId": 7,
+      "hole": "8",
+      "strokes": 3,
+      "penalty": ""
+    },
+    {
+      "id": 63,
+      "playerId": 7,
+      "hole": "9",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 64,
+      "playerId": 8,
+      "hole": "1",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 65,
+      "playerId": 8,
+      "hole": "2",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 66,
+      "playerId": 8,
+      "hole": "3",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 67,
+      "playerId": 8,
+      "hole": "4",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 68,
+      "playerId": 8,
+      "hole": "5",
+      "strokes": 3,
+      "penalty": ""
+    },
+    {
+      "id": 69,
+      "playerId": 8,
+      "hole": "6",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 70,
+      "playerId": 8,
+      "hole": "7",
+      "strokes": 5,
+      "penalty": ""
+    },
+    {
+      "id": 71,
+      "playerId": 8,
+      "hole": "8",
+      "strokes": 4,
+      "penalty": ""
+    },
+    {
+      "id": 72,
+      "playerId": 8,
+      "hole": "9",
+      "strokes": 6,
+      "penalty": ""
     }
   ],
   "teams": [
-    {
-      "id": 1,
-      "name": "Drunkees"
-    },
-    {
-      "id": 2,
-      "name": "Team 2"
-    }
+    { "id": 1, "name": "Drunkees" },
+    { "id": 2, "name": "Tipsy Tees" },
+    { "id": 3, "name": "Boozy Birdies" },
+    { "id": 4, "name": "Mulligan Maniacs" }
   ]
 }
