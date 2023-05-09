@@ -11,6 +11,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import Scorecard from './Scorecard';
+import SignIn from './SignIn';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path="/rules" element={<Rules />} />
           <Route path="/players" element={<Players />} />
           <Route path="/scorecard" element={<Scorecard />} />
+          <Route path="/sign-in" element={<SignIn />} />
         </Routes>
       </div>
     </Router>
