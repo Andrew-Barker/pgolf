@@ -85,7 +85,7 @@
     {
       "id": 2,
       "name": "Captain Morgan",
-      "team": "Tipsy Tees"
+      "team": "Two Dudes One Beer"
     },
     {
       "id": 3,
@@ -95,7 +95,7 @@
     {
       "id": 4,
       "name": "Jack Daniels",
-      "team": "Tipsy Tees"
+      "team": "Two Dudes One Beer"
     },
     {
       "id": 5,
@@ -625,9 +625,21 @@
     }
   ],
   "teams": [
-    { "id": 1, "name": "Drunkees" },
-    { "id": 2, "name": "Tipsy Tees" },
-    { "id": 3, "name": "Boozy Birdies" },
-    { "id": 4, "name": "Mulligan Maniacs" }
+    {
+      "id": 1,
+      "name": "Drunkees"
+    },
+    {
+      "id": 2,
+      "name": "Two Dudes One Beer"
+    },
+    {
+      "id": 3,
+      "name": "Boozy Birdies"
+    },
+    {
+      "id": 4,
+      "name": "Mulligan Maniacs"
+    }
   ]
 }

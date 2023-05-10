@@ -30,7 +30,6 @@ const Leaderboard = () => {
     const courseData = await courseResponse.json();
 
     const summedPar = sumPar(courseData, currHole.currentHole)
-    console.log('summed par', summedPar)
 
     setCurrCourseInfo({hole: currHole.currentHole, par: summedPar})
 
@@ -83,7 +82,6 @@ const Leaderboard = () => {
     }));
 
     teamScoresArray.sort((a, b) => a.score - b.score);
-    console.log('team scores', teamScoresArray)
     return teamScoresArray;
   }
   

@@ -9,6 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { titleCase } from '../utils/helper';
 import TeamsDropdown from "./inputs/TeamsDropdown";
+import { v4 as uuidv4 } from 'uuid';
 
 function convertKeysToLower(obj) {
     const newObj = {};
@@ -64,6 +65,7 @@ function AddData(props) {
       };
 
     const addRecord = (newRecord) => {
+        newRecord['id'] = uuidv4()
         newRecord = convertKeysToLower(newRecord)
         fetch(`http://localhost:3001/${endpoint}`, {
           method: 'POST',
@@ -89,7 +91,6 @@ function AddData(props) {
               <DialogTitle>Add New {title}</DialogTitle>
               <DialogContent>
                   {Object.entries(addRow).map(([key]) => {
-                    console.log('add keys', key, teams, addRow)
                     if (key === "team" && teams.length > 0) {
                       return (<TeamsDropdown
                         teams={teams}

@@ -29,7 +29,7 @@ export const getClaims = (auth) => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         return false;
       });
   }

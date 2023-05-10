@@ -193,9 +193,18 @@ function BasicTable(props) {
   const [editingRow, setEditingRow] = React.useState({});
 
   const handleClickOpen = (rowId) => {
-    setEditingRow(data.find((obj) => obj.id === Number(rowId)));
+    const row = data.find((obj) => obj.id === Number(rowId));
+    if (footerType.toLowerCase() === "teams") {
+      setEditingRow({
+        ...row,
+        previousTeamName: row.name,
+      });
+    } else {
+      setEditingRow(row);
+    }
     setOpen(true);
   };
+  
 
   const handleClose = () => {
     setOpen(false);
@@ -203,9 +212,15 @@ function BasicTable(props) {
   };
 
   const triggerEdit = () => {
-    onEdit(editingRow);
+    if (footerType.toLowerCase() === "teams") {
+      const { previousTeamName, ...editRow } = editingRow;
+      onEdit(editRow, previousTeamName);
+    } else {
+      onEdit(editingRow);
+    }
     handleClose();
   };
+  
 
   return (
     <>
@@ -228,7 +243,7 @@ function BasicTable(props) {
         </DialogTitle>
         <DialogContent>
           {Object.entries(editingRow).map(([key]) => {
-            if (key !== "id" && key !== 'team') {
+            if (key !== "id" && key !== 'team' && key !== 'previousTeamName') {
               return (
                 <TextField
                   key={key}

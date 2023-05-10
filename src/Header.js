@@ -13,8 +13,8 @@ const Header = () => {
 
   useEffect(() => {
     getClaims(auth).then((adminStatus) => {
-      console.log("admin status", adminStatus);
       setIsAdmin(adminStatus);
+      console.log('curr user', auth.currentUser)
     });
   }, [auth.currentUser]);
 
