@@ -9,7 +9,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { titleCase } from '../utils/helper';
 import TeamsDropdown from "./inputs/TeamsDropdown";
-import { v4 as uuidv4 } from 'uuid';
+import { getDatabase, ref, push, set } from "firebase/database";
+import { uuidv4 } from "@firebase/util";
 
 function convertKeysToLower(obj) {
     const newObj = {};
@@ -64,22 +65,26 @@ function AddData(props) {
         setAddRow({})
       };
 
-    const addRecord = (newRecord) => {
-        newRecord['id'] = uuidv4()
-        newRecord = convertKeysToLower(newRecord)
-        fetch(`http://localhost:3001/${endpoint}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(newRecord)
-        })
-          .then(response => response.json())
-          .then(setOpen(false))
-          .then(setAddRow({}))
-          .then(onAdd)
-          .catch(error => console.error(error));
-      }
+      const addRecord = (newRecord) => {
+        const recId = uuidv4();
+        const db = getDatabase();
+        newRecord.id = recId
+        const newRecordRef = ref(db, `${endpoint}/${recId}`);
+        newRecord = convertKeysToLower(newRecord);
+        set(newRecordRef, { ...newRecord, id: recId })
+          .then(() => {
+            setOpen(false);
+            setAddRow({});
+            onAdd();
+          })
+          .catch((error) => console.error(error));
+      };
+      
+      
+      
+      
+      
+      
 
 
   return (

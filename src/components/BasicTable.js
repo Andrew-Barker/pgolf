@@ -83,11 +83,14 @@ function BasicTable(props) {
   };
 
   useEffect(() => {
-    setEditingRow({
-      ...editingRow,
-      ["team"]: selectedTeamName,
-    });
+    if (selectedTeamName && editingRow) {
+      setEditingRow({
+        ...editingRow,
+        ["team"]: selectedTeamName,
+      });
+    }
   }, [selectedTeamName]);
+  
 
   useEffect(() => {
     getTeams()
@@ -142,23 +145,28 @@ function BasicTable(props) {
   const getColumnWidth = (columnName) => {
     if (data && data.length > 0) {
       const columnData = data.map((row) => row[columnName]);
-
+  
       const longestValue = columnData.reduce((a, b) => {
-        return a.toString().length > b.toString().length
-          ? a.toString()
-          : b.toString();
+        if (!a || a.toString().trim() === "") {
+          a = "";
+        }
+        if (!b || b.toString().trim() === "") {
+          b = "";
+        }
+        return a.toString().length > b.toString().length ? a.toString() : b.toString();
       });
-
+  
       const maxLength = Math.max(
         longestValue.toString().length,
         columnName.toString().length
       );
-
+  
       return maxLength * 10; // assuming 10 pixels per character
     } else {
       return 75;
     }
   };
+  
 
   const createColumnObjs = (columns) => {
     let cols = columns.map((column) => {
@@ -193,7 +201,8 @@ function BasicTable(props) {
   const [editingRow, setEditingRow] = React.useState({});
 
   const handleClickOpen = (rowId) => {
-    const row = data.find((obj) => obj.id === Number(rowId));
+    console.log("rowId:", rowId);
+    const row = data.find((obj) => obj.id === rowId);
     if (footerType.toLowerCase() === "teams") {
       setEditingRow({
         ...row,
@@ -204,6 +213,7 @@ function BasicTable(props) {
     }
     setOpen(true);
   };
+  
   
 
   const handleClose = () => {
