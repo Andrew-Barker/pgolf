@@ -32,7 +32,7 @@ const handleTeamsDelete = async (id) => {
   }
 }
 
-const handlePlayersEdit = (obj) => {
+const handlePlayersEdit = (obj, triggerGetData = true) => {
   fetch(`http://localhost:3001/players/${obj.id}`, {
     method: 'PUT',
     headers: {
@@ -44,7 +44,9 @@ const handlePlayersEdit = (obj) => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      getData()
+      if(triggerGetData){
+        getData()
+      }
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -52,7 +54,9 @@ const handlePlayersEdit = (obj) => {
     });
 }
 
-const handleTeamEdit = (obj) => {
+const handleTeamEdit = async (obj, previousTeamName) => {
+  const response = await fetch(`http://localhost:3001/players?team=${previousTeamName}`);
+  const playersOnTeam = await response.json();
   fetch(`http://localhost:3001/teams/${obj.id}`, {
       method: 'PUT',
       headers: {
@@ -65,6 +69,13 @@ const handleTeamEdit = (obj) => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         getTeamData()
+      }).then(() =>{
+        playersOnTeam.forEach((player) => {
+          const updatedPlayer = { ...player, team: obj.name };
+          handlePlayersEdit(updatedPlayer, false)
+        })
+      }).then(() => {
+        getData()
       })
       .catch((error) => {
         console.error('Error:', error);
