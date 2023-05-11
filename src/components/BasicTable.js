@@ -168,8 +168,8 @@ function BasicTable(props) {
         longestValue.toString().length,
         columnName.toString().length
       );
-  
-      return maxLength > 75 ? maxLength * 10 : 75; // assuming 10 pixels per character
+      
+      return maxLength * 10  > 75 ? maxLength * 10 : 75; // assuming 10 pixels per character
     } else {
       return 75;
     }

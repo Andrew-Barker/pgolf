@@ -49,18 +49,18 @@ export const updateDB = (endpoint, obj, showSnackbar, displayToast = true, custo
 };
 
 
-export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = null, filterOptions = null) => {
+export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = null, filterOptions = null, nonArrayValue = false) => {
   const formattedEndpoint = formatEndpoint(endpoint);
   const pathsRef = ref(db, endpoint);
   onValue(pathsRef, (snapshot) => {
     let data = snapshot.val();
-    
+
     if (filterOptions) {
       const filterKey = Object.keys(filterOptions)[0];
       const filterValue = filterOptions[filterKey];
-      data = Object.values(data || {}).filter(item => item[filterKey] === filterValue);
+      data = nonArrayValue ? data : Object.values(data || {}).filter(item => item[filterKey] === filterValue);
     } else {
-      data = Object.values(data || {});
+      data = nonArrayValue ? data : Object.values(data || {});
     }
 
     if (sortKey) {

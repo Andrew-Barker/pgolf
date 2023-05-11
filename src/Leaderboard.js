@@ -1,47 +1,57 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PageTitle from './components/PageTitle';
 import BasicTable from './components/BasicTable';
 import { v4 as uuidv4 } from 'uuid';
+import { getFromDB, getCurrHole } from "./firebaseUtils";
+import { SnackbarContext } from './SnackbarContext';
 
 const Leaderboard = () => {
   const [teamScores, setTeamScores] = useState([]);
-  const teamCols = ["Team", "Strokes", "Score"]
-
+  const [currCourseInfo, setCurrCourseInfo] = useState({});
   const [indScores, setIndScores] = useState([]);
+  const [currHole, setCurrHole] = useState(0);
+  const [players, setPlayers] = useState([]);
+  const [teams, setTeams] = useState([]);
+  const [course, setCourse] = useState([])
+  const [scorecards, setScorecards] = useState([])
+
+  const teamCols = ["Team", "Strokes", "Score"]
   const indCols = ["Name", "Strokes", "Score"]
 
-  const [currCourseInfo, setCurrCourseInfo] = useState({});
+  const showSnackbar = useContext(SnackbarContext);
 
   useEffect(() => {
     getData();
   }, []);
 
   const getData = async () => {
-    const response = await fetch('http://localhost:3001/scorecards');
-    const scorecardsData = await response.json();
+    getFromDB('scorecards', setScorecards, showSnackbar, null, null, true)
+    getFromDB('players', setPlayers, showSnackbar)
+    getFromDB('course/holes', setCourse, showSnackbar)
 
-    const playersResponse = await fetch('http://localhost:3001/players');
-    const playersData = await playersResponse.json();
-
-    const currHoleResponse = await fetch('http://localhost:3001/currentHoles');
-    const currHole = await currHoleResponse.json();
-
-    const courseResponse = await fetch('http://localhost:3001/courses');
-    const courseData = await courseResponse.json();
-
-    const summedPar = sumPar(courseData, currHole.currentHole)
-
-    setCurrCourseInfo({hole: currHole.currentHole, par: summedPar})
-
-    setIndScores(rollupIndData(scorecardsData, playersData, currHole.currentHole, summedPar))
+    getCurrHole(setCurrHole, showSnackbar)
   };
+
+
+  useEffect(() => {
+    const summedPar = sumPar(course, currHole)
+    console.log("COURSE", course)
+    setCurrCourseInfo({hole: currHole, par: summedPar})
+
+    console.log("SC BEFORE SENDING TO ROLLUP", scorecards)
+
+    setIndScores(rollupIndData(scorecards, players, currHole, summedPar))
+  }, [course, currHole, scorecards, players])
 
   const rollupIndData = (scorecardsData, playersData, currHole, summedPar) => {
     let indData = []
-    playersData.forEach((player, index) => {
-      const playerScorecards = scorecardsData.filter(scorecard => scorecard.playerId === player.id && scorecard.hole <= currHole);
-      const totalStrokes = playerScorecards.reduce((accumulator, scorecard) => accumulator + scorecard.strokes, 0);
-      indData.push({'id': index,'name': player.name, 'strokes': totalStrokes, score: totalStrokes-summedPar, 'team': player.team})
+    playersData.forEach((player) => {
+      const playerScorecards = Object.values(scorecardsData[player.id]);
+        const activeScores = playerScorecards.filter(scorecard => parseInt(scorecard.hole) <= currHole);
+      const totalStrokes = activeScores.reduce((accumulator, scorecard) => accumulator + parseInt(scorecard.strokes), 0);
+      indData.push({'id': uuidv4(),'name': player.name, 'strokes': totalStrokes, score: totalStrokes-summedPar, 'team': player.team})
+      console.log('ind Data', indData)
+      
     })
 
     indData.sort((a, b) => a.score - b.score);
@@ -91,15 +101,15 @@ const Leaderboard = () => {
   <main>
     <PageTitle title="Leaderboard"/>
     <section id="course-info">
-      {currCourseInfo.hole && (<p><strong>Hole: {currCourseInfo.hole}</strong></p>)}
-      {currCourseInfo.par && (<p><strong>Par: {currCourseInfo.par}</strong></p>)}
+      {currCourseInfo.hole && currCourseInfo.hole > course.length && (<p><strong>Hole: FINAL</strong></p>)} 
+      {currCourseInfo.hole && currCourseInfo.hole <= course.length && (<p><strong>Hole: {currCourseInfo.hole}</strong></p>)}      
     </section>
     <section id="team-leaderboard">
-      <h2>Team Leaderboard</h2>
+      <h2>Team Leaderboard {currCourseInfo.par && (<small>(Par: {currCourseInfo.par*2})</small>)}</h2>
       <BasicTable data={teamScores} columns={teamCols} showActions={false} gridHeight="34vh" showTotalFooter={false}/>
     </section>
     <section id="individual-leaderboard">
-      <h2>Individual Leaderboard</h2>
+      <h2>Individual Leaderboard {currCourseInfo.par && (<small>(Par: {currCourseInfo.par})</small>)}</h2>
       <BasicTable data={indScores} columns={indCols} showActions={false} gridHeight="45vh" showTotalFooter={false}/>
     </section>
   </main>
