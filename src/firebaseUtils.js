@@ -1,5 +1,5 @@
 import db from "./firebase";
-import { ref, remove, set, onValue } from "firebase/database";
+import { ref, remove, set, onValue, get } from "firebase/database";
 import { uuidv4 } from "@firebase/util";
 
 
@@ -9,7 +9,12 @@ export const removeFromDB = (endpoint, id, customFunction = () => {}, showSnackb
     const recordRef = ref(db, `${endpoint}/${id}`);
     remove(recordRef)
       .then(() => {
-        customFunction();
+        if(formattedEndpoint === 'player'){
+            customFunction(id)
+        }
+        else{
+            customFunction();
+        }
         showSnackbar(`${formattedEndpoint} removed successfully`, 'success');
       })
       .catch((error) => {
@@ -66,16 +71,21 @@ export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = 
   
 
 
-  export const insertDB = (endpoint, newRecord, customFunction = () => {}, showSnackbar) => {
+  export const insertDB = (endpoint, newRecord, customFunction = () => {}, showSnackbar = undefined, idToUse = undefined) => {
     const formattedEndpoint = formatEndpoint(endpoint);
-    const recId = uuidv4();
+    const recId = idToUse ? idToUse : uuidv4();
     newRecord.id = recId
     const newRecordRef = ref(db, `${endpoint}/${recId}`);
     newRecord = convertKeysToLower(newRecord);
     set(newRecordRef, { ...newRecord, id: recId })
       .then(() => {
         customFunction()
-        showSnackbar(`${formattedEndpoint} inserted successfully`, 'success');
+        if(showSnackbar) {
+            showSnackbar(`${formattedEndpoint} inserted successfully`, 'success');
+        }
+        if (formattedEndpoint === 'player'){
+            createBaseScorecard(recId, showSnackbar)
+        }
       })
       .catch((error) => {
         console.error(error)
@@ -94,10 +104,37 @@ export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = 
     }
   };
   
-  function convertKeysToLower(obj) {
+  const convertKeysToLower = (obj) => {
     const newObj = {};
     for (const [key, value] of Object.entries(obj)) {
       newObj[key.toLowerCase()] = value;
     }
     return newObj;
   }
+
+  const createBaseScorecard = (playerId) => {
+    // const scorecardRef = db.ref(`scorecards/${playerId}`);
+  const courseHolesRef = ref(db, `course/holes`);
+
+  get(courseHolesRef)
+    .then((holesSnapshot) => {
+      const holesData = holesSnapshot.val();
+      
+      // Create the base scorecard object
+      const baseScorecard = {};
+      Object.keys(holesData).forEach((holeId) => {
+        baseScorecard[holeId] = {
+          hole: holesData[holeId].hole,
+          strokes: 0,
+          penalty: ''
+        };
+      });
+
+    insertDB(`scorecards/`, baseScorecard, () => {}, undefined, playerId)
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
+  
