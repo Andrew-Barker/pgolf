@@ -3,6 +3,10 @@ import BasicTable from './components/BasicTable';
 import PageTitle from './components/PageTitle';
 import AddData from './components/AddData';
 import { deleteData } from './utils/helper';
+import { removeFromDB, updateDB, getFromDB } from "./firebaseUtils";
+
+const TEAMS_ENDPOINT = 'teams'
+const PLAYERS_ENDPOINT = 'players'
 
 const Players = () => {
   const [data, setData] = useState([]);
@@ -90,9 +94,7 @@ const getData = async () => {
   };
 
 const getTeamData = async () => {
-  const response = await fetch('http://localhost:3001/teams');
-    const data = await response.json();
-    setTeamData(data);
+  getFromDB(TEAMS_ENDPOINT, setTeamData)
 }
 
 

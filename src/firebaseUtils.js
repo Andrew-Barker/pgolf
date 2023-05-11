@@ -29,7 +29,7 @@ export const updateDB = (endpoint, obj, customFunction = () => {}) => {
 };
 
 
-export const getFromDB = async (endpoint, sortKey = null, setDataState) => {
+export const getFromDB = async (endpoint, setDataState, sortKey = null) => {
     const holesRef = ref(db, endpoint);
     onValue(holesRef, (snapshot) => {
       const data = snapshot.val();

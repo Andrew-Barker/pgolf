@@ -16,7 +16,7 @@ const ENDPOINT = 'course/holes'
   }, []);
 
   const getData = async () => {
-    getFromDB(ENDPOINT, 'hole', setHoles)
+    getFromDB(ENDPOINT, setHoles, 'hole')
   };
 
   const getCourse = async () => {
