@@ -52,6 +52,7 @@ const getTotals = (data) => {
         totals.strokes = data.reduce((total, obj) => {
           return total + parseInt(obj[key]);
         }, 0);
+        console.log('data', totals.strokes)
       }
     });
   }
@@ -100,6 +101,7 @@ function BasicTable(props) {
   const CustomFooter = (props) => {
     const { data } = props;
     const totals = getTotals(data);
+    console.log("totals", totals)
     return (
       <GridOverlay
         style={{
@@ -119,15 +121,21 @@ function BasicTable(props) {
                 <strong>Total Par: {totals.par}</strong>
               </Box>
             )}
-            {totals.strokes && (
+            {totals.strokes !== 0 && (
               <Box component="span" marginRight={2}>
                 <strong>Total Strokes: {totals.strokes}</strong>
               </Box>
             )}
-            {totals.strokes && totals.par && (
+            {totals.strokes === 0 && (
+              null
+            )}
+            {totals.strokes !== 0 && totals.par && (
               <Box component="span" marginRight={2}>
                 <strong>Total Score: {totals.strokes - totals.par}</strong>
               </Box>
+            )}
+            {totals.strokes === 0 && totals.par && (
+              null
             )}
             {footerType !== "Records" && (
               <Box component="span" marginRight={2}>

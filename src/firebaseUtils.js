@@ -46,42 +46,53 @@ export const updateDB = (endpoint, obj, showSnackbar, displayToast = true, custo
 };
 
 
-export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = null) => {
-    const formattedEndpoint = formatEndpoint(endpoint);
-    const holesRef = ref(db, endpoint);
-    onValue(holesRef, (snapshot) => {
-      const data = snapshot.val();
-      const dataArray = Object.values(data || {});
-  
-      if (sortKey) {
-        dataArray.sort((a, b) => {
-          if (sortKey === 'hole') {
-            return parseInt(a[sortKey], 10) - parseInt(b[sortKey], 10);
-          }
-          if (typeof a[sortKey] === 'string' && typeof b[sortKey] === 'string') {
-            return a[sortKey].localeCompare(b[sortKey]);
-          }
-          return a[sortKey] - b[sortKey];
-        });
-      }
-  
-      setDataState(dataArray);
-    }, (error) => {
-      console.log(error)
-      showSnackbar(`Error getting ${formattedEndpoint}s`, 'error');
-    });
-  };
+export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = null, filterOptions = null) => {
+  const formattedEndpoint = formatEndpoint(endpoint);
+  const pathsRef = ref(db, endpoint);
+  onValue(pathsRef, (snapshot) => {
+    let data = snapshot.val();
+    
+    if (filterOptions) {
+      const filterKey = Object.keys(filterOptions)[0];
+      const filterValue = filterOptions[filterKey];
+      console.log('filter options', filterOptions, filterKey, filterValue, data)
+      data = Object.values(data || {}).filter(item => item[filterKey] === filterValue);
+      console.log('data after', data)
+    } else {
+      data = Object.values(data || {});
+    }
+
+    if (sortKey) {
+      data.sort((a, b) => {
+        if (sortKey === 'hole') {
+          return parseInt(a[sortKey], 10) - parseInt(b[sortKey], 10);
+        }
+        if (typeof a[sortKey] === 'string' && typeof b[sortKey] === 'string') {
+          return a[sortKey].localeCompare(b[sortKey]);
+        }
+        return a[sortKey] - b[sortKey];
+      });
+    }
+
+    setDataState(data);
+  }, (error) => {
+    console.log(error)
+    showSnackbar(`Error getting ${formattedEndpoint}s`, 'error');
+  });
+};
   
   
 
 
-  export const insertDB = (endpoint, newRecord, showSnackbar, idToUse = undefined, displayToast = true, customFunction = () => {} ) => {
+  export const insertDB = (endpoint, newRecord, showSnackbar, idToUse = undefined, displayToast = true, customFunction = () => {}, includeIdOnRecord = true) => {
     const formattedEndpoint = formatEndpoint(endpoint);
     const recId = idToUse ? idToUse : uuidv4();
-    newRecord.id = recId
+    if(includeIdOnRecord){
+      newRecord.id = recId
+    }
     const newRecordRef = ref(db, `${endpoint}/${recId}`);
     newRecord = convertKeysToLower(newRecord);
-    set(newRecordRef, { ...newRecord, id: recId })
+    set(newRecordRef, includeIdOnRecord ? { ...newRecord, id: recId } : newRecord)
       .then(() => {
         customFunction()
         if(displayToast) {
@@ -94,6 +105,18 @@ export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = 
       .catch((error) => {
         console.error(error)
         showSnackbar(`Error inserting ${formattedEndpoint}`, 'error');
+    });
+  };
+
+
+  export const getCurrHole = async (setState, showSnackbar) => {
+    const currHoleRef = ref(db, 'current_hole');
+    onValue(currHoleRef, (snapshot) => {
+      const holeNumber = snapshot.val();
+      setState(holeNumber);
+    }, (error) => {
+      console.log(error)
+      showSnackbar(`Error getting current hole`, 'error');
     });
   };
 
@@ -128,13 +151,14 @@ export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = 
       const baseScorecard = {};
       Object.keys(holesData).forEach((holeId) => {
         baseScorecard[holeId] = {
+          id: uuidv4(),
           hole: holesData[holeId].hole,
           strokes: 0,
           penalty: ''
         };
       });
 
-    insertDB(`scorecards/`, baseScorecard, undefined, playerId, false)
+    insertDB(`scorecards/`, baseScorecard, undefined, playerId, false, () => ({}), false)
     })
     .catch((error) => {
       console.log(error);

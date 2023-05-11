@@ -1,14 +1,16 @@
-import React, { useState, useEffect }  from 'react';
+import React, { useState, useEffect, useContext }  from 'react';
 import BasicTable from './components/BasicTable';
 import PlayersDropdown from './components/inputs/PlayersDropdown';
 import PageTitle from './components/PageTitle';
 import { getAuth } from "firebase/auth";
 import { getClaims } from "./utils/helper";
+import { removeFromDB, updateDB, getFromDB, getCurrHole } from "./firebaseUtils";
+import { SnackbarContext } from './SnackbarContext';
 
 function mergeCourseData(scorecards, courses) {
     return scorecards.map((scorecard) => {
       const { hole, ...rest } = scorecard;
-      const courseData = courses.find((course) => course.id === hole);
+      const courseData = courses.find((course) => course.hole === hole);
       const par = courseData ? courseData.par : '';
   
       return { ...rest, hole, par };
@@ -21,10 +23,14 @@ const [data, setData] = useState([]);
 const [currHole, setCurrHole] = useState([]);
 const [players, setPlayers] = useState([]);
 const [selectedPlayerId, setSelectedPlayerId] = useState('');
+const [loggedInPlayer, setLoggedInPlayer] = useState(null);
+const [courseData, setCourseData] = useState(null);
+const [scoreCardData, setScorecardData] = useState([]);
+const [filteredScoreCardData, setFilteredScoreCardData] = useState([]);
 const cols = ["Hole", "Par", "Strokes", "Penalty"]
 const [isAdmin, setIsAdmin] = useState(false);
-const [authUpdated, setAuthUpdated] = useState(false);
-  const auth = getAuth();
+const showSnackbar = useContext(SnackbarContext);
+const auth = getAuth();
 
   
 
@@ -36,7 +42,7 @@ const [authUpdated, setAuthUpdated] = useState(false);
           console.log("admin status", adminStatus, auth?.currentUser);
           setIsAdmin(adminStatus);
           if (!isAdmin || isAdmin === false) {
-            getData(user.uid);
+            getFromDB('players', setLoggedInPlayer, showSnackbar, null, {'uuid': user.uid})
           } else {
             setSelectedPlayerId(players[0].id)
           }
@@ -57,32 +63,14 @@ const handleEdit = (obj) => {
 }
 
 const getData = async (playerId) => {
-    const courseResponse = await fetch('http://localhost:3001/courses');
-    const courseData = await courseResponse.json();
-
-    const scoreResponse = await fetch(`http://localhost:3001/scorecards?playerId=${playerId}`);
-    let scoreData = await scoreResponse.json();
-
-    if(!isAdmin){
-      scoreData = scoreData.filter((score) => score.hole <= currHole);
-    }
-
-
-    const mergedData = mergeCourseData(scoreData, courseData);
-
-    setData(mergedData);
+  if(playerId){
+    getFromDB(`course/holes`, setCourseData, showSnackbar, 'hole')
+    getFromDB(`scorecards/${playerId}`, setScorecardData, showSnackbar, 'hole')
+  }
   };
 
   const getPlayers = async () => {
-    const response = await fetch('http://localhost:3001/players');
-    const data = await response.json();
-    setPlayers(data);
-  };
-
-  const getCurrHole = async () => {
-    const response = await fetch('http://localhost:3001/currentHoles');
-    const data = await response.json();
-    setCurrHole(data['currentHole']);
+    getFromDB('players', setPlayers, showSnackbar, 'name')
   };
 
   const handlePlayerChange = (event) => {
@@ -95,16 +83,35 @@ useEffect(() => {
   }
 }, [selectedPlayerId])
 
-// useEffect(() => {
-//   if(!isAdmin && auth.currentUser){
-//     getData(auth.currentUser.uid)
-//   }
-// }, [isAdmin])
+useEffect(() => {
+  if(loggedInPlayer){
+    getData(loggedInPlayer[0].id)
+  }
+}, [loggedInPlayer])
+
+useEffect(() => {
+  if(!isAdmin && scoreCardData && scoreCardData.length > 0){
+    setFilteredScoreCardData(scoreCardData.filter((score) => score.hole <= currHole));
+  }
+
+
+  
+}, [scoreCardData])
 
 useEffect(() => {
     getPlayers()
-    getCurrHole()
+    getCurrHole(setCurrHole, showSnackbar)
   }, []);
+
+  useEffect(() => {
+  }, [currHole]);
+
+  useEffect(() => {
+    console.log('scorecard data', filteredScoreCardData, 'course data', courseData)
+    const mergedData = mergeCourseData(filteredScoreCardData, courseData);
+
+    setData(mergedData);
+  }, [filteredScoreCardData])
 
   return (<main>
     <section id="scorecard">
