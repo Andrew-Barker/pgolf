@@ -101,7 +101,7 @@ function AddData(props) {
               </DialogContent>
               <DialogActions>
                   <Button onClick={handleClose}>Cancel</Button>
-                  <Button onClick={() => insertDB(endpoint, addRow, postAdd, showSnackbar)}>Save</Button>
+                  <Button onClick={() => insertDB(endpoint, addRow, showSnackbar, undefined, true, postAdd)}>Save</Button>
               </DialogActions>
           </Dialog></>
   );

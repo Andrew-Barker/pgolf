@@ -3,7 +3,7 @@ import { ref, remove, set, onValue, get } from "firebase/database";
 import { uuidv4 } from "@firebase/util";
 
 
-export const removeFromDB = (endpoint, id, customFunction = () => {}, showSnackbar) => {
+export const removeFromDB = (endpoint, id, showSnackbar, displayToast = true, customFunction = () => {}  ) => {
     // Remove the record from Firebase Realtime Database
     const formattedEndpoint = formatEndpoint(endpoint);
     const recordRef = ref(db, `${endpoint}/${id}`);
@@ -15,7 +15,9 @@ export const removeFromDB = (endpoint, id, customFunction = () => {}, showSnackb
         else{
             customFunction();
         }
-        showSnackbar(`${formattedEndpoint} removed successfully`, 'success');
+        if (displayToast){
+            showSnackbar(`${formattedEndpoint} removed successfully`, 'success');
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -25,14 +27,16 @@ export const removeFromDB = (endpoint, id, customFunction = () => {}, showSnackb
   };
   
 
-export const updateDB = (endpoint, obj, customFunction = () => {}, showSnackbar) => {
+export const updateDB = (endpoint, obj, showSnackbar, displayToast = true, customFunction = () => {}) => {
   // Pass the id up to the parent component
   const formattedEndpoint = formatEndpoint(endpoint);
   const recordRef = ref(db, `${endpoint}/${obj.id}`);
   set(recordRef, obj)
     .then(() => {
       customFunction();
-      showSnackbar(`${formattedEndpoint} updated successfully`, 'success');
+      if(displayToast) {
+          showSnackbar(`${formattedEndpoint} updated successfully`, 'success');
+      }
     })
     .catch((error) => {
       console.error("Error:", error);
@@ -71,7 +75,7 @@ export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = 
   
 
 
-  export const insertDB = (endpoint, newRecord, customFunction = () => {}, showSnackbar = undefined, idToUse = undefined) => {
+  export const insertDB = (endpoint, newRecord, showSnackbar, idToUse = undefined, displayToast = true, customFunction = () => {} ) => {
     const formattedEndpoint = formatEndpoint(endpoint);
     const recId = idToUse ? idToUse : uuidv4();
     newRecord.id = recId
@@ -80,7 +84,7 @@ export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = 
     set(newRecordRef, { ...newRecord, id: recId })
       .then(() => {
         customFunction()
-        if(showSnackbar) {
+        if(displayToast) {
             showSnackbar(`${formattedEndpoint} inserted successfully`, 'success');
         }
         if (formattedEndpoint === 'player'){
@@ -130,7 +134,7 @@ export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = 
         };
       });
 
-    insertDB(`scorecards/`, baseScorecard, () => {}, undefined, playerId)
+    insertDB(`scorecards/`, baseScorecard, undefined, playerId, false)
     })
     .catch((error) => {
       console.log(error);

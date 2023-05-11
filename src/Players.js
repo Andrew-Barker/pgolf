@@ -95,10 +95,10 @@ useEffect(() => {
       <PageTitle title="Players"/>
       <h2>Players</h2>
       <AddData title={'Player'} endpoint={"players"} fields={cols} onAdd={getData}/>
-      <BasicTable data={data} columns={cols} onDelete={(id) => removeFromDB(PLAYERS_ENDPOINT, id, handleDelete, showSnackbar)} onEdit={(obj) => updateDB(PLAYERS_ENDPOINT, obj, getData, showSnackbar)} gridHeight="35vh" footerType="Players"></BasicTable>
+      <BasicTable data={data} columns={cols} onDelete={(id) => removeFromDB(PLAYERS_ENDPOINT, id, showSnackbar, true, handleDelete, )} onEdit={(obj) => updateDB(PLAYERS_ENDPOINT, obj, showSnackbar, true, getData)} gridHeight="35vh" footerType="Players"></BasicTable>
       <h2>Teams</h2>
       <AddData title={'Team'} endpoint={"teams"} fields={teamCols} onAdd={getTeamData}/>
-      <BasicTable data={teamData} columns={teamCols} onDelete={(id) => removeFromDB(TEAMS_ENDPOINT, id, getData, showSnackbar)} onEdit={(obj) => updateDB(TEAMS_ENDPOINT, obj, getData, showSnackbar)} gridHeight="35vh" footerType="Teams"></BasicTable>
+      <BasicTable data={teamData} columns={teamCols} onDelete={(id) => removeFromDB(TEAMS_ENDPOINT, id, showSnackbar, true, getData)} onEdit={(obj) => updateDB(TEAMS_ENDPOINT, obj, showSnackbar, true, getData)} gridHeight="35vh" footerType="Teams"></BasicTable>
     </section>
   </main>)
 };
