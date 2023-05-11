@@ -6,7 +6,6 @@ import { uuidv4 } from "@firebase/util";
 export const removeFromDB = (endpoint, id, showSnackbar, displayToast = true, customFunction = () => {}  ) => {
     // Remove the record from Firebase Realtime Database
     const formattedEndpoint = formatEndpoint(endpoint);
-    console.debug('formatted endpoint', formattedEndpoint)
     const recordRef = ref(db, `${endpoint}/${id}`);
     remove(recordRef)
       .then(() => {
@@ -103,6 +102,9 @@ export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = 
         if (formattedEndpoint === 'player'){
             createBaseScorecard(recId, showSnackbar)
         }
+        if (formattedEndpoint === 'hole') {
+          addNewHoleAllPlayersScorecards(newRecord.hole, showSnackbar)
+        }
       })
       .catch((error) => {
         console.error(error)
@@ -168,6 +170,30 @@ export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = 
     });
   }
 
+  const addNewHoleAllPlayersScorecards = (holeNum, showSnackbar) => {
+    // const scorecardRef = db.ref(`scorecards/${playerId}`);
+  const playersRef = ref(db, `players`);
+
+  get(playersRef)
+    .then((playersSnapshot) => {
+      const playersData = Object.values(playersSnapshot.val());
+      
+      playersData.forEach((player) => {
+        const newHole = {
+          id: uuidv4(),
+          penalty: '',
+          strokes: 0,
+          hole: holeNum
+        }
+        insertDB(`scorecards/${player.id}`, newHole, showSnackbar, newHole.id, false)
+      })
+      
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+
 
   const removeStaleHoleOnScorecard = () => {
     const courseHolesRef = ref(db, `course/holes`);
@@ -190,8 +216,6 @@ export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = 
       // Convert Set to an array of unique 'hole' values
       const uniqueHolesArray = Array.from(uniqueHoles);
 
-      console.log('unique hole nums', uniqueHolesArray)
-
       get(scorecardsRef).then((scoreSnapshot) => {
         const scorecardsData = scoreSnapshot.val();
 
@@ -205,8 +229,6 @@ Object.entries(scorecardsData).forEach(([scorecardId, scorecard]) => {
     }
   });
 });
-
-console.log('invalid paths', invalidScorecardPaths)
 
 const invalidScorecards = invalidScorecardPaths.map((path) => {
   const [playerCard, holeScore] = path.split('/');
