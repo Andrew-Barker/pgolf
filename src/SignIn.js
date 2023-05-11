@@ -50,6 +50,12 @@ const SignIn = () => {
       });
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      signIn(e);
+    }
+  };
+
   return (
     <StyledPaper elevation={3}>
       <Typography variant="h5" align="center">
@@ -70,6 +76,7 @@ const SignIn = () => {
           margin="normal"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          onKeyPress={handleKeyPress}
         />
         <Button
           fullWidth
