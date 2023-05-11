@@ -2,7 +2,7 @@ import BasicTable from './components/BasicTable';
 import React, { useState, useEffect } from 'react';
 import AddData from './components/AddData';
 import PageTitle from './components/PageTitle';
-import { getDatabase, ref, onValue, set } from "firebase/database";
+import { getDatabase, ref, onValue, set, remove } from "firebase/database";
   
 
   const Course = () => {
@@ -10,9 +10,19 @@ import { getDatabase, ref, onValue, set } from "firebase/database";
     const cols = ["Hole", "Bar", "Drink", "Par", "Hazard"]
 
     const handleDelete = (id) => {
-      // Pass the id up to the parent component
-      // console.log(`Hole to delete: ${id}`)
+      // Remove the record from Firebase Realtime Database
+      const db = getDatabase();
+      const holeRef = ref(db, `course/holes/${id}`);
+      remove(holeRef)
+        .then(() => {
+          getData();
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          getData();
+        });
     };
+    
   
     const handleEdit = (obj) => {
       // Pass the id up to the parent component
