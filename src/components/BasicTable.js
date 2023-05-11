@@ -67,6 +67,7 @@ function BasicTable(props) {
     onEdit,
     gridHeight = "70vh",
     footerType = "Records",
+    dataType = 'Records',
     showActions = true,
     showTotalFooter = true
   } = props;
@@ -260,7 +261,15 @@ function BasicTable(props) {
         </DialogTitle>
         <DialogContent>
           {Object.entries(editingRow).map(([key]) => {
-            if (key !== "id" && key !== 'team' && key !== 'previousTeamName') {
+            if (key === "team" && teams.length > 0) {
+              return (<TeamsDropdown
+                teams={teams}
+                value={editingRow[key]}
+                onChange={handleTeamChange}
+              />)
+            } else if(dataType === 'scorecards' && (key === 'par' || key === 'hole')){
+              return null
+            } else if (key !== "id" && key !== 'team' && key !== 'previousTeamName') {
               return (
                 <TextField
                   key={key}
@@ -279,12 +288,6 @@ function BasicTable(props) {
                   }
                 />
               );
-            } else if (key === "team" && teams.length > 0) {
-              return (<TeamsDropdown
-                teams={teams}
-                value={editingRow[key]}
-                onChange={handleTeamChange}
-              />)
             } else {
               return null;
             }

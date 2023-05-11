@@ -26,7 +26,6 @@ const [selectedPlayerId, setSelectedPlayerId] = useState('');
 const [loggedInPlayer, setLoggedInPlayer] = useState(null);
 const [courseData, setCourseData] = useState(null);
 const [scoreCardData, setScorecardData] = useState([]);
-const [filteredScoreCardData, setFilteredScoreCardData] = useState([]);
 const cols = ["Hole", "Par", "Strokes", "Penalty"]
 const [isAdmin, setIsAdmin] = useState(false);
 const showSnackbar = useContext(SnackbarContext);
@@ -85,7 +84,9 @@ useEffect(() => {
 }, [selectedPlayerId])
 
 useEffect(() => {
-  if(loggedInPlayer){
+  console.debug(`maybe logged in player, what's id`, loggedInPlayer)
+  if(loggedInPlayer && loggedInPlayer.length > 0){
+    console.debug(`have logged in player, what's id`, loggedInPlayer)
     getData(loggedInPlayer[0].id)
   }
 }, [loggedInPlayer])
@@ -94,8 +95,9 @@ useEffect(() => {
   console.debug('scoreCardData changed', scoreCardData)
   if(scoreCardData && scoreCardData.length > 0){
     const holeNum = !isAdmin || isAdmin === false ? currHole : 18
+    const strokeMin = !isAdmin || isAdmin === false ? 0 : -1
     console.debug('holeNum', holeNum)
-    const mergedData = mergeCourseData(scoreCardData.filter((score) => parseInt(score.hole) <= holeNum), courseData);
+    const mergedData = mergeCourseData(scoreCardData.filter((score) => parseInt(score.hole) <= holeNum && score.strokes > strokeMin), courseData);
     setData(mergedData);
   }
 }, [scoreCardData])
@@ -108,12 +110,9 @@ useEffect(() => {
   useEffect(() => {
   }, [currHole]);
 
-  // useEffect(() => {
-  //   console.debug('scorecard data filtered', filteredScoreCardData, 'course data', courseData)
-  //   const mergedData = mergeCourseData(filteredScoreCardData, courseData);
-
-  //   setData(mergedData);
-  // }, [filteredScoreCardData])
+  const reloadData = () => {
+    console.log('reload data for player', selectedPlayerId)
+  }
 
   return (<main>
     <section id="scorecard">
@@ -126,7 +125,7 @@ useEffect(() => {
         onChange={handlePlayerChange}
       />
       )}
-      <BasicTable data={data} columns={cols} onDelete={handleDelete} onEdit={handleEdit}></BasicTable>
+      <BasicTable data={data} columns={cols} onDelete={() => {console.log('do nothing')}} onEdit={(obj) => updateDB(`scorecards/${selectedPlayerId}`, obj, showSnackbar, true, reloadData)} dataType="scorecards"></BasicTable>
     </section>
   </main>)
 };

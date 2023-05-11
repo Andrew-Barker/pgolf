@@ -150,8 +150,9 @@ export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = 
       // Create the base scorecard object
       const baseScorecard = {};
       Object.keys(holesData).forEach((holeId) => {
-        baseScorecard[holeId] = {
-          id: uuidv4(),
+        const id = uuidv4()
+        baseScorecard[id] = {
+          id: id,
           hole: holesData[holeId].hole,
           strokes: 0,
           penalty: ''
