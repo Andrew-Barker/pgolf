@@ -2,53 +2,21 @@ import BasicTable from './components/BasicTable';
 import React, { useState, useEffect } from 'react';
 import AddData from './components/AddData';
 import PageTitle from './components/PageTitle';
-import { getDatabase, ref, onValue, set, remove } from "firebase/database";
+import { getDatabase, ref, onValue } from "firebase/database";
+import { removeFromDB, updateDB, getFromDB } from "./firebaseUtils";
   
+const ENDPOINT = 'course/holes'
 
   const Course = () => {
     const [holes, setHoles] = useState([]);
     const cols = ["Hole", "Bar", "Drink", "Par", "Hazard"]
-
-    const handleDelete = (id) => {
-      // Remove the record from Firebase Realtime Database
-      const db = getDatabase();
-      const holeRef = ref(db, `course/holes/${id}`);
-      remove(holeRef)
-        .then(() => {
-          getData();
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          getData();
-        });
-    };
-    
-  
-    const handleEdit = (obj) => {
-      // Pass the id up to the parent component
-      const db = getDatabase();
-      const holeRef = ref(db, `course/holes/${obj.id}`);
-      set(holeRef, obj)
-        .then(() => {
-          getData();
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          getData();
-        });
-    };
 
   useEffect(() => {
     getData();
   }, []);
 
   const getData = async () => {
-    const db = getDatabase();
-    const holesRef = ref(db, "course/holes");
-    onValue(holesRef, (snapshot) => {
-      const data = snapshot.val();
-      setHoles(data ? Object.values(data) : []);
-    });
+    getFromDB(ENDPOINT, 'hole', setHoles)
   };
 
   const getCourse = async () => {
@@ -66,8 +34,8 @@ import { getDatabase, ref, onValue, set, remove } from "firebase/database";
       <section id="course">
         <h2>Course</h2>
         <button onClick={getCourse}>Get course json</button>
-        <AddData title={'Hole'} endpoint={"course/holes"} fields={cols} onAdd={getData}/>
-        <BasicTable data={holes} columns={cols} onDelete={handleDelete} onEdit={handleEdit}></BasicTable>
+        <AddData title={'Hole'} endpoint={ENDPOINT} fields={cols} onAdd={getData}/>
+        <BasicTable data={holes} columns={cols} onDelete={(id) => removeFromDB(ENDPOINT, id, getData)} onEdit={(obj) => updateDB(ENDPOINT, obj, getData)}></BasicTable>
       </section>
     </main>
   );
