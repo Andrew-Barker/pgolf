@@ -37,18 +37,33 @@ export const updateDB = (endpoint, obj, customFunction = () => {}, showSnackbar)
 };
 
 
-export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = null ) => {
+export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = null) => {
     const formattedEndpoint = formatEndpoint(endpoint);
     const holesRef = ref(db, endpoint);
     onValue(holesRef, (snapshot) => {
       const data = snapshot.val();
-      const orderedData = Object.values(data || {}).sort((a, b) => a[sortKey] - b[sortKey]);
-      setDataState(orderedData ? Object.values(orderedData) : []);
+      const dataArray = Object.values(data || {});
+  
+      if (sortKey) {
+        dataArray.sort((a, b) => {
+          if (sortKey === 'hole') {
+            return parseInt(a[sortKey], 10) - parseInt(b[sortKey], 10);
+          }
+          if (typeof a[sortKey] === 'string' && typeof b[sortKey] === 'string') {
+            return a[sortKey].localeCompare(b[sortKey]);
+          }
+          return a[sortKey] - b[sortKey];
+        });
+      }
+  
+      setDataState(dataArray);
     }, (error) => {
-        console.log(error)
-        showSnackbar(`Error getting ${formattedEndpoint}s`, 'error');
+      console.log(error)
+      showSnackbar(`Error getting ${formattedEndpoint}s`, 'error');
     });
   };
+  
+  
 
 
   export const insertDB = (endpoint, newRecord, customFunction = () => {}, showSnackbar) => {

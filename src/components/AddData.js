@@ -11,6 +11,7 @@ import { titleCase } from '../utils/helper';
 import TeamsDropdown from "./inputs/TeamsDropdown";
 import { insertDB } from "../firebaseUtils";
 import { SnackbarContext } from "../SnackbarContext";
+import { getFromDB } from "../firebaseUtils";
 
 function AddData(props) {
     const { title, endpoint, fields, onAdd} = props;  
@@ -21,11 +22,9 @@ function AddData(props) {
     const [teams, setTeams] = useState([]);
     const [selectedTeamName, setSelectedTeamName] = useState("");
 
-  const getTeams = async () => {
-    const response = await fetch("http://localhost:3001/teams");
-    const data = await response.json();
-    setTeams(data);
-  };
+    const getTeams = async () => {
+      getFromDB('teams', setTeams, showSnackbar, 'name')
+    };
 
   const handleTeamChange = (event) => {
     setSelectedTeamName(event.target.value);

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext }  from 'react';
 import BasicTable from './components/BasicTable';
 import PageTitle from './components/PageTitle';
 import AddData from './components/AddData';
-import { deleteData } from './utils/helper';
 import { removeFromDB, updateDB, getFromDB } from "./firebaseUtils";
 import { SnackbarContext } from './SnackbarContext';
 
@@ -69,11 +68,11 @@ const handleTeamEdit = async (obj, previousTeamName) => {
 }
 
 const getData = async () => {
-    getFromDB(PLAYERS_ENDPOINT, setData)
+    getFromDB(PLAYERS_ENDPOINT, setData, showSnackbar, 'name')
   };
 
 const getTeamData = async () => {
-  getFromDB(TEAMS_ENDPOINT, setTeamData)
+  getFromDB(TEAMS_ENDPOINT, setTeamData, showSnackbar, 'name')
 }
 
 

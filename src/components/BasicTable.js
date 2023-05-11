@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import Table from "@mui/material/Table";
 import Dialog from "@mui/material/Dialog";
@@ -22,6 +22,8 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { titleCase } from "../utils/helper";
 import TeamsDropdown from "./inputs/TeamsDropdown";
+import { getFromDB } from "../firebaseUtils";
+import { SnackbarContext } from "../SnackbarContext";
 
 const StyledTable = styled(Table)({
   minWidth: 650,
@@ -71,11 +73,10 @@ function BasicTable(props) {
 
   const [teams, setTeams] = useState([]);
   const [selectedTeamName, setSelectedTeamName] = useState("");
+  const showSnackbar = useContext(SnackbarContext);
 
   const getTeams = async () => {
-    const response = await fetch("http://localhost:3001/teams");
-    const data = await response.json();
-    setTeams(data);
+    getFromDB('teams', setTeams, showSnackbar, 'name')
   };
 
   const handleTeamChange = (event) => {

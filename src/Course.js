@@ -1,22 +1,24 @@
 import BasicTable from './components/BasicTable';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import AddData from './components/AddData';
 import PageTitle from './components/PageTitle';
 import { getDatabase, ref, onValue } from "firebase/database";
 import { removeFromDB, updateDB, getFromDB } from "./firebaseUtils";
+import { SnackbarContext } from './SnackbarContext';
   
 const ENDPOINT = 'course/holes'
 
   const Course = () => {
     const [holes, setHoles] = useState([]);
     const cols = ["Hole", "Bar", "Drink", "Par", "Hazard"]
+    const showSnackbar = useContext(SnackbarContext);
 
   useEffect(() => {
     getData();
   }, []);
 
   const getData = async () => {
-    getFromDB(ENDPOINT, setHoles, 'hole')
+    getFromDB(ENDPOINT, setHoles, showSnackbar, 'hole')
   };
 
   const getCourse = async () => {
