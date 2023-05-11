@@ -52,7 +52,6 @@ const getTotals = (data) => {
         totals.strokes = data.reduce((total, obj) => {
           return total + parseInt(obj[key]);
         }, 0);
-        console.log('data', totals.strokes)
       }
     });
   }
@@ -101,7 +100,6 @@ function BasicTable(props) {
   const CustomFooter = (props) => {
     const { data } = props;
     const totals = getTotals(data);
-    console.log("totals", totals)
     return (
       <GridOverlay
         style={{

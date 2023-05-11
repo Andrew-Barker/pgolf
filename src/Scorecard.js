@@ -39,12 +39,11 @@ const auth = getAuth();
       if (user) {
 
         getClaims(auth).then((adminStatus) => {
-          console.log("admin status", adminStatus, auth?.currentUser);
+          console.debug("admin status", adminStatus, auth?.currentUser);
           setIsAdmin(adminStatus);
-          if (!isAdmin || isAdmin === false) {
+          if (!adminStatus || adminStatus === false) {
+            console.debug('admin triggered as false')
             getFromDB('players', setLoggedInPlayer, showSnackbar, null, {'uuid': user.uid})
-          } else {
-            setSelectedPlayerId(players[0].id)
           }
         });
       }
@@ -64,6 +63,7 @@ const handleEdit = (obj) => {
 
 const getData = async (playerId) => {
   if(playerId){
+    console.debug('start of get player data', playerId)
     getFromDB(`course/holes`, setCourseData, showSnackbar, 'hole')
     getFromDB(`scorecards/${playerId}`, setScorecardData, showSnackbar, 'hole')
   }
@@ -79,6 +79,7 @@ const getData = async (playerId) => {
 
 useEffect(() => {
   if(selectedPlayerId){
+    console.debug('get player from selection in DD', selectedPlayerId)
     getData(selectedPlayerId)
   }
 }, [selectedPlayerId])
@@ -90,12 +91,13 @@ useEffect(() => {
 }, [loggedInPlayer])
 
 useEffect(() => {
-  if(!isAdmin && scoreCardData && scoreCardData.length > 0){
-    setFilteredScoreCardData(scoreCardData.filter((score) => score.hole <= currHole));
+  console.debug('scoreCardData changed', scoreCardData)
+  if(scoreCardData && scoreCardData.length > 0){
+    const holeNum = !isAdmin || isAdmin === false ? currHole : 18
+    console.debug('holeNum', holeNum)
+    const mergedData = mergeCourseData(scoreCardData.filter((score) => parseInt(score.hole) <= holeNum), courseData);
+    setData(mergedData);
   }
-
-
-  
 }, [scoreCardData])
 
 useEffect(() => {
@@ -106,12 +108,12 @@ useEffect(() => {
   useEffect(() => {
   }, [currHole]);
 
-  useEffect(() => {
-    console.log('scorecard data', filteredScoreCardData, 'course data', courseData)
-    const mergedData = mergeCourseData(filteredScoreCardData, courseData);
+  // useEffect(() => {
+  //   console.debug('scorecard data filtered', filteredScoreCardData, 'course data', courseData)
+  //   const mergedData = mergeCourseData(filteredScoreCardData, courseData);
 
-    setData(mergedData);
-  }, [filteredScoreCardData])
+  //   setData(mergedData);
+  // }, [filteredScoreCardData])
 
   return (<main>
     <section id="scorecard">
