@@ -169,7 +169,7 @@ function BasicTable(props) {
         columnName.toString().length
       );
   
-      return maxLength * 10; // assuming 10 pixels per character
+      return maxLength > 75 ? maxLength * 10 : 75; // assuming 10 pixels per character
     } else {
       return 75;
     }
@@ -209,7 +209,6 @@ function BasicTable(props) {
   const [editingRow, setEditingRow] = React.useState({});
 
   const handleClickOpen = (rowId) => {
-    console.log("rowId:", rowId);
     const row = data.find((obj) => obj.id === rowId);
     if (footerType.toLowerCase() === "teams") {
       setEditingRow({

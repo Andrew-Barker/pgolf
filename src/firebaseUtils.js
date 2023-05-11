@@ -6,6 +6,7 @@ import { uuidv4 } from "@firebase/util";
 export const removeFromDB = (endpoint, id, showSnackbar, displayToast = true, customFunction = () => {}  ) => {
     // Remove the record from Firebase Realtime Database
     const formattedEndpoint = formatEndpoint(endpoint);
+    console.debug('formatted endpoint', formattedEndpoint)
     const recordRef = ref(db, `${endpoint}/${id}`);
     remove(recordRef)
       .then(() => {
@@ -14,6 +15,9 @@ export const removeFromDB = (endpoint, id, showSnackbar, displayToast = true, cu
         }
         else{
             customFunction();
+        }
+        if (formattedEndpoint === 'hole') {
+          removeStaleHoleOnScorecard()
         }
         if (displayToast){
             showSnackbar(`${formattedEndpoint} removed successfully`, 'success');
@@ -55,9 +59,7 @@ export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = 
     if (filterOptions) {
       const filterKey = Object.keys(filterOptions)[0];
       const filterValue = filterOptions[filterKey];
-      console.log('filter options', filterOptions, filterKey, filterValue, data)
       data = Object.values(data || {}).filter(item => item[filterKey] === filterValue);
-      console.log('data after', data)
     } else {
       data = Object.values(data || {});
     }
@@ -76,7 +78,7 @@ export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = 
 
     setDataState(data);
   }, (error) => {
-    console.log(error)
+    console.error(error)
     showSnackbar(`Error getting ${formattedEndpoint}s`, 'error');
   });
 };
@@ -115,7 +117,7 @@ export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = 
       const holeNumber = snapshot.val();
       setState(holeNumber);
     }, (error) => {
-      console.log(error)
+      console.error(error)
       showSnackbar(`Error getting current hole`, 'error');
     });
   };
@@ -162,8 +164,63 @@ export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = 
     insertDB(`scorecards/`, baseScorecard, undefined, playerId, false, () => ({}), false)
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
+  }
+
+
+  const removeStaleHoleOnScorecard = () => {
+    const courseHolesRef = ref(db, `course/holes`);
+    const scorecardsRef = ref(db, `scorecards`);
+
+    get(courseHolesRef)
+    .then((holesSnapshot) => {
+      const holesData = holesSnapshot.val();
+      
+      // Collect unique 'hole' values using a Set
+      const uniqueHoles = new Set();
+
+      if(holesData) {
+        Object.values(holesData).forEach((hole) => {
+          uniqueHoles.add(hole.hole);
+        });
+      }
+
+
+      // Convert Set to an array of unique 'hole' values
+      const uniqueHolesArray = Array.from(uniqueHoles);
+
+      console.log('unique hole nums', uniqueHolesArray)
+
+      get(scorecardsRef).then((scoreSnapshot) => {
+        const scorecardsData = scoreSnapshot.val();
+
+const invalidScorecardPaths = [];
+
+Object.entries(scorecardsData).forEach(([scorecardId, scorecard]) => {
+  Object.entries(scorecard).forEach(([holeId, hole]) => {
+    if (!uniqueHolesArray.includes(hole.hole)) {
+      const path = `${scorecardId}/${holeId}`;
+      invalidScorecardPaths.push(path);
+    }
+  });
+});
+
+console.log('invalid paths', invalidScorecardPaths)
+
+const invalidScorecards = invalidScorecardPaths.map((path) => {
+  const [playerCard, holeScore] = path.split('/');
+  return { playerCard, holeScore };
+});
+        
+invalidScorecards.forEach((invalidCard) => {
+          removeFromDB(`scorecards/${invalidCard.playerCard}`,invalidCard.holeScore, undefined, false)
+        })
+        
+      })
+
+    // insertDB(`scorecards/`, baseScorecard, undefined, playerId, false, () => ({}), false)
+    })
   }
 
   

@@ -38,10 +38,8 @@ const auth = getAuth();
       if (user) {
 
         getClaims(auth).then((adminStatus) => {
-          console.debug("admin status", adminStatus, auth?.currentUser);
           setIsAdmin(adminStatus);
           if (!adminStatus || adminStatus === false) {
-            console.debug('admin triggered as false')
             getFromDB('players', setLoggedInPlayer, showSnackbar, null, {'uuid': user.uid})
           }
         });
@@ -62,7 +60,6 @@ const handleEdit = (obj) => {
 
 const getData = async (playerId) => {
   if(playerId){
-    console.debug('start of get player data', playerId)
     getFromDB(`course/holes`, setCourseData, showSnackbar, 'hole')
     getFromDB(`scorecards/${playerId}`, setScorecardData, showSnackbar, 'hole')
   }
@@ -78,25 +75,20 @@ const getData = async (playerId) => {
 
 useEffect(() => {
   if(selectedPlayerId){
-    console.debug('get player from selection in DD', selectedPlayerId)
     getData(selectedPlayerId)
   }
 }, [selectedPlayerId])
 
 useEffect(() => {
-  console.debug(`maybe logged in player, what's id`, loggedInPlayer)
   if(loggedInPlayer && loggedInPlayer.length > 0){
-    console.debug(`have logged in player, what's id`, loggedInPlayer)
     getData(loggedInPlayer[0].id)
   }
 }, [loggedInPlayer])
 
 useEffect(() => {
-  console.debug('scoreCardData changed', scoreCardData)
   if(scoreCardData && scoreCardData.length > 0){
     const holeNum = !isAdmin || isAdmin === false ? currHole : 18
     const strokeMin = !isAdmin || isAdmin === false ? 0 : -1
-    console.debug('holeNum', holeNum)
     const mergedData = mergeCourseData(scoreCardData.filter((score) => parseInt(score.hole) <= holeNum && score.strokes > strokeMin), courseData);
     setData(mergedData);
   }
@@ -111,7 +103,7 @@ useEffect(() => {
   }, [currHole]);
 
   const reloadData = () => {
-    console.log('reload data for player', selectedPlayerId)
+    getData(selectedPlayerId)
   }
 
   return (<main>

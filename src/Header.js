@@ -20,7 +20,6 @@ const Header = () => {
 
   const handleSignOut = () => {
     signOut(auth)
-      .then(() => console.log("Signed out successfully"))
       .then(() => window.location.href = "/")
       .catch((error) => console.error("Error signing out:", error));
   };
