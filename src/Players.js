@@ -1,9 +1,10 @@
-import React, { useState, useEffect }  from 'react';
+import React, { useState, useEffect, useContext }  from 'react';
 import BasicTable from './components/BasicTable';
 import PageTitle from './components/PageTitle';
 import AddData from './components/AddData';
 import { deleteData } from './utils/helper';
 import { removeFromDB, updateDB, getFromDB } from "./firebaseUtils";
+import { SnackbarContext } from './SnackbarContext';
 
 const TEAMS_ENDPOINT = 'teams'
 const PLAYERS_ENDPOINT = 'players'
@@ -13,28 +14,8 @@ const Players = () => {
   const cols = ["Name", "Team"]
   const teamCols = ["Name"]
   const [teamData, setTeamData] = useState([]);
+  const showSnackbar = useContext(SnackbarContext);
 
-const updatePlayersTeamName = (prevTeamName) => {
-  console.log('previous team name')
-}
-
-const handlePlayersDelete = async (id) => {
-  try {
-    await deleteData('players', id);
-    getData()
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-const handleTeamsDelete = async (id) => {
-  try {
-    await deleteData('teams', id);
-    getTeamData()
-  } catch (error) {
-    console.error(error);
-  }
-}
 
 const handlePlayersEdit = (obj, triggerGetData = true) => {
   fetch(`http://localhost:3001/players/${obj.id}`, {
@@ -88,9 +69,7 @@ const handleTeamEdit = async (obj, previousTeamName) => {
 }
 
 const getData = async () => {
-    const response = await fetch('http://localhost:3001/players');
-    const data = await response.json();
-    setData(data);
+    getFromDB(PLAYERS_ENDPOINT, setData)
   };
 
 const getTeamData = async () => {
@@ -108,10 +87,10 @@ useEffect(() => {
       <PageTitle title="Players"/>
       <h2>Players</h2>
       <AddData title={'Player'} endpoint={"players"} fields={cols} onAdd={getData}/>
-      <BasicTable data={data} columns={cols} onDelete={handlePlayersDelete} onEdit={handlePlayersEdit} gridHeight="35vh" footerType="Players"></BasicTable>
+      <BasicTable data={data} columns={cols} onDelete={(id) => removeFromDB(PLAYERS_ENDPOINT, id, getData, showSnackbar)} onEdit={(obj) => updateDB(PLAYERS_ENDPOINT, obj, getData, showSnackbar)} gridHeight="35vh" footerType="Players"></BasicTable>
       <h2>Teams</h2>
       <AddData title={'Team'} endpoint={"teams"} fields={teamCols} onAdd={getTeamData}/>
-      <BasicTable data={teamData} columns={teamCols} onDelete={handleTeamsDelete} onEdit={handleTeamEdit} gridHeight="35vh" footerType="Teams"></BasicTable>
+      <BasicTable data={teamData} columns={teamCols} onDelete={(id) => removeFromDB(TEAMS_ENDPOINT, id, getData, showSnackbar)} onEdit={(obj) => updateDB(TEAMS_ENDPOINT, obj, getData, showSnackbar)} gridHeight="35vh" footerType="Teams"></BasicTable>
     </section>
   </main>)
 };

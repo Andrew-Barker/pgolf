@@ -12,11 +12,13 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import Scorecard from './Scorecard';
 import SignIn from './SignIn';
+import { SnackbarProvider } from './SnackbarContext';
 
 
 function App() {
   return (
-    <Router>
+    <SnackbarProvider>
+      <Router>
       <Header />
       <div className="content">
         <Routes className="routes">
@@ -30,6 +32,7 @@ function App() {
         </Routes>
       </div>
     </Router>
+    </SnackbarProvider>
   );
 }
 export default App;
