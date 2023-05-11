@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -9,22 +9,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { titleCase } from '../utils/helper';
 import TeamsDropdown from "./inputs/TeamsDropdown";
-import { getDatabase, ref, push, set } from "firebase/database";
-import { uuidv4 } from "@firebase/util";
-
-function convertKeysToLower(obj) {
-    const newObj = {};
-    for (const [key, value] of Object.entries(obj)) {
-      newObj[key.toLowerCase()] = value;
-    }
-    return newObj;
-  }
-  
+import { insertDB } from "../firebaseUtils";
+import { SnackbarContext } from "../SnackbarContext";
 
 function AddData(props) {
     const { title, endpoint, fields, onAdd} = props;  
     const [open, setOpen] = React.useState(false);
     const [addRow, setAddRow] = React.useState({});
+    const showSnackbar = useContext(SnackbarContext);
 
     const [teams, setTeams] = useState([]);
     const [selectedTeamName, setSelectedTeamName] = useState("");
@@ -64,28 +56,13 @@ function AddData(props) {
         setOpen(false);
         setAddRow({})
       };
-
-      const addRecord = (newRecord) => {
-        const recId = uuidv4();
-        const db = getDatabase();
-        newRecord.id = recId
-        const newRecordRef = ref(db, `${endpoint}/${recId}`);
-        newRecord = convertKeysToLower(newRecord);
-        set(newRecordRef, { ...newRecord, id: recId })
-          .then(() => {
-            setOpen(false);
+      
+      
+      const postAdd = () => {
+          setOpen(false);
             setAddRow({});
             onAdd();
-          })
-          .catch((error) => console.error(error));
-      };
-      
-      
-      
-      
-      
-      
-
+      }
 
   return (
     <><Box display="flex" justifyContent="flex-end" alignItems="center" mb={2}>
@@ -125,7 +102,7 @@ function AddData(props) {
               </DialogContent>
               <DialogActions>
                   <Button onClick={handleClose}>Cancel</Button>
-                  <Button onClick={() => addRecord(addRow)}>Save</Button>
+                  <Button onClick={() => insertDB(endpoint, addRow, postAdd, showSnackbar)}>Save</Button>
               </DialogActions>
           </Dialog></>
   );

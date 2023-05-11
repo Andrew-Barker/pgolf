@@ -1,5 +1,6 @@
 import db from "./firebase";
 import { ref, remove, set, onValue } from "firebase/database";
+import { uuidv4 } from "@firebase/util";
 
 
 export const removeFromDB = (endpoint, id, customFunction = () => {}, showSnackbar) => {
@@ -50,6 +51,24 @@ export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = 
   };
 
 
+  export const insertDB = (endpoint, newRecord, customFunction = () => {}, showSnackbar) => {
+    const formattedEndpoint = formatEndpoint(endpoint);
+    const recId = uuidv4();
+    newRecord.id = recId
+    const newRecordRef = ref(db, `${endpoint}/${recId}`);
+    newRecord = convertKeysToLower(newRecord);
+    set(newRecordRef, { ...newRecord, id: recId })
+      .then(() => {
+        customFunction()
+        showSnackbar(`${formattedEndpoint} inserted successfully`, 'success');
+      })
+      .catch((error) => {
+        console.error(error)
+        showSnackbar(`Error inserting ${formattedEndpoint}`, 'error');
+    });
+  };
+
+
   const formatEndpoint = (endpoint) => {
     if (endpoint === 'course/holes') {
       return 'hole';
@@ -60,3 +79,10 @@ export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = 
     }
   };
   
+  function convertKeysToLower(obj) {
+    const newObj = {};
+    for (const [key, value] of Object.entries(obj)) {
+      newObj[key.toLowerCase()] = value;
+    }
+    return newObj;
+  }
