@@ -35,7 +35,7 @@ const ENDPOINT = 'course/holes'
       <PageTitle title="Course Details"/>
       <section id="course">
         <h2>Course</h2>
-        <button onClick={getCourse}>Get course json</button>
+        {/* <button onClick={getCourse}>Get course json</button> */}
         <AddData title={'Hole'} endpoint={ENDPOINT} fields={cols} onAdd={getData}/>
         <BasicTable data={holes} columns={cols} onDelete={(id) => removeFromDB(ENDPOINT, id, showSnackbar, true, getData)} onEdit={(obj) => updateDB(ENDPOINT, obj, showSnackbar, true, getData)}></BasicTable>
       </section>
