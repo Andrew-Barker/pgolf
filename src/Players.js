@@ -3,6 +3,8 @@ import BasicTable from './components/BasicTable';
 import PageTitle from './components/PageTitle';
 import AddData from './components/AddData';
 import { removeFromDB, updateDB, getFromDB } from "./firebaseUtils";
+import db from "./firebase";
+import { ref, onValue } from "firebase/database";
 import { SnackbarContext } from './SnackbarContext';
 
 const TEAMS_ENDPOINT = 'teams'
@@ -39,32 +41,19 @@ const handlePlayersEdit = (obj, triggerGetData = true) => {
 }
 
 const handleTeamEdit = async (obj, previousTeamName) => {
-  const response = await fetch(`http://localhost:3001/players?team=${previousTeamName}`);
-  const playersOnTeam = await response.json();
-  fetch(`http://localhost:3001/teams/${obj.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(obj),
+  const pathsRef = ref(db, `players`);
+  onValue(pathsRef, (snapshot) => {
+    let players = Object.values(snapshot.val());
+    console.log('all players after team update', players)
+    if(players && players.length > 0) {
+      players = players.filter(player => player.team === previousTeamName);
+    console.log(`should only be players from ${previousTeamName}`, players)
+    players.forEach((player) => {
+      player.team = obj.name
+      updateDB(`players`, player, showSnackbar,false)
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        getTeamData()
-      }).then(() =>{
-        playersOnTeam.forEach((player) => {
-          const updatedPlayer = { ...player, team: obj.name };
-          handlePlayersEdit(updatedPlayer, false)
-        })
-      }).then(() => {
-        getData()
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        getTeamData()
-      });
+    }
+  })
 }
 
 const getData = async () => {

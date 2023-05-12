@@ -35,10 +35,7 @@ const Leaderboard = () => {
 
   useEffect(() => {
     const summedPar = sumPar(course, currHole)
-    console.log("COURSE", course)
     setCurrCourseInfo({hole: currHole, par: summedPar})
-
-    console.log("SC BEFORE SENDING TO ROLLUP", scorecards)
 
     setIndScores(rollupIndData(scorecards, players, currHole, summedPar))
   }, [course, currHole, scorecards, players])
@@ -50,8 +47,6 @@ const Leaderboard = () => {
         const activeScores = playerScorecards.filter(scorecard => parseInt(scorecard.hole) <= currHole);
       const totalStrokes = activeScores.reduce((accumulator, scorecard) => accumulator + parseInt(scorecard.strokes), 0);
       indData.push({'id': uuidv4(),'name': player.name, 'strokes': totalStrokes, score: totalStrokes-summedPar, 'team': player.team})
-      console.log('ind Data', indData)
-      
     })
 
     indData.sort((a, b) => a.score - b.score);

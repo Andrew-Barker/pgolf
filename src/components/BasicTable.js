@@ -229,12 +229,7 @@ function BasicTable(props) {
   };
 
   const triggerEdit = () => {
-    if (footerType.toLowerCase() === "teams") {
-      const { previousTeamName, ...editRow } = editingRow;
-      onEdit(editRow, previousTeamName);
-    } else {
       onEdit(editingRow);
-    }
     handleClose();
   };
   

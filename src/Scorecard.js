@@ -50,14 +50,6 @@ const auth = getAuth();
   
   
 
-const handleDelete = (id) => {
-    // console.log('delete', id)
-}
-
-const handleEdit = (obj) => {
-    // console.log('delete', obj.id)
-}
-
 const getData = async (playerId) => {
   if(playerId){
     getFromDB(`course/holes`, setCourseData, showSnackbar, 'hole')

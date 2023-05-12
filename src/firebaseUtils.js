@@ -30,23 +30,43 @@ export const removeFromDB = (endpoint, id, showSnackbar, displayToast = true, cu
   };
   
 
-export const updateDB = (endpoint, obj, showSnackbar, displayToast = true, customFunction = () => {}) => {
-  // Pass the id up to the parent component
-  const formattedEndpoint = formatEndpoint(endpoint);
-  const recordRef = ref(db, `${endpoint}/${obj.id}`);
-  set(recordRef, obj)
-    .then(() => {
-      customFunction();
-      if(displayToast) {
-          showSnackbar(`${formattedEndpoint} updated successfully`, 'success');
-      }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      customFunction();
-      showSnackbar(`Error updating ${formattedEndpoint}`, 'error');
-    });
-};
+  export const updateDB = (endpoint, obj, showSnackbar, displayToast = true, customFunction = () => {}) => {
+    // Pass the id up to the parent component
+    const formattedEndpoint = formatEndpoint(endpoint);
+    let newObj = obj; // Create a new reference to obj
+    let previousTeamName; // Declare previousTeamName variable in a higher scope
+  
+    if(formattedEndpoint === 'team'){
+      const { previousTeamName: prevTeamName, ...rest } = newObj; 
+      previousTeamName = prevTeamName; // Assign value to previousTeamName
+      newObj = rest; // Update the newObj
+    }
+
+    const recordRef = ref(db, `${endpoint}/${newObj.id}`);
+    set(recordRef, newObj)
+      .then(() => {
+        if(formattedEndpoint === 'team'){
+          const { ...rest } = newObj;
+          newObj = rest; // Update the newObj
+          updatePlayersTeams(newObj.name, previousTeamName, showSnackbar)
+  
+        } else {
+          customFunction();
+        }
+        if(displayToast) {
+            showSnackbar(`${formattedEndpoint} updated successfully`, 'success');
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        if (customFunction){
+          customFunction();
+        }
+        showSnackbar(`Error updating ${formattedEndpoint}`, 'error');
+      });
+  };
+  
+  
 
 
 export const getFromDB = async (endpoint, setDataState, showSnackbar, sortKey = null, filterOptions = null, nonArrayValue = false) => {
@@ -242,6 +262,22 @@ invalidScorecards.forEach((invalidCard) => {
       })
 
     // insertDB(`scorecards/`, baseScorecard, undefined, playerId, false, () => ({}), false)
+    })
+  }
+
+  const updatePlayersTeams = async (newTeamName, previousTeamName, showSnackbar) => {
+    const pathsRef = ref(db, `players`);
+    onValue(pathsRef, (snapshot) => {
+      let players = Object.values(snapshot.val());
+      console.log('all players after team update', players)
+      if(players && players.length > 0) {
+        players = players.filter(player => player.team === previousTeamName);
+      console.log(`should only be players from ${previousTeamName}`, players)
+      players.forEach((player) => {
+        player.team = newTeamName
+        updateDB(`players`, player, showSnackbar,false)
+      })
+      }
     })
   }
 
