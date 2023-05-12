@@ -65,6 +65,25 @@ export const removeFromDB = (endpoint, id, showSnackbar, displayToast = true, cu
         showSnackbar(`Error updating ${formattedEndpoint}`, 'error');
       });
   };
+
+  export const updateCurrentHoleInDB = (obj, showSnackbar, displayToast = true, customFunction = () => {}) => {
+    console.log('update curr hole in db', obj)
+    const recordRef = ref(db, `current_hole`);
+    set(recordRef, obj)
+      .then(() => {
+          customFunction();
+        if(displayToast) {
+            showSnackbar(`Current Hole updated successfully`, 'success');
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        if (customFunction){
+          customFunction();
+        }
+        showSnackbar(`Error updating Current Hole`, 'error');
+      });
+  };
   
   
 

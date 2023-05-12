@@ -4,8 +4,12 @@ import PlayersDropdown from './components/inputs/PlayersDropdown';
 import PageTitle from './components/PageTitle';
 import { getAuth } from "firebase/auth";
 import { getClaims } from "./utils/helper";
-import { removeFromDB, updateDB, getFromDB, getCurrHole } from "./firebaseUtils";
+import { updateCurrentHoleInDB, updateDB, getFromDB, getCurrHole } from "./firebaseUtils";
 import { SnackbarContext } from './SnackbarContext';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import NextIcon from '@mui/icons-material/NavigateNext';
+import PreviousIcon from '@mui/icons-material/NavigateBefore';
 
 function mergeCourseData(scorecards, courses) {
     return scorecards.map((scorecard) => {
@@ -98,10 +102,24 @@ useEffect(() => {
     getData(selectedPlayerId)
   }
 
+  const reloadCurrHole = () => {
+    getCurrHole(setCurrHole, showSnackbar)
+  }
+
   return (<main>
     <section id="scorecard">
     <PageTitle title="Scorecard"/>
       <h2>Scorecard</h2>
+      {isAdmin && (
+        <Box display="flex" justifyContent="flex-end" alignItems="center" mb={2}>
+          <Button variant="outlined" color='primary' startIcon={<PreviousIcon />} onClick={() => updateCurrentHoleInDB(currHole-1,showSnackbar,true, reloadCurrHole)}>
+            Previous Hole
+        </Button>
+        <Button variant="outlined" color='primary' startIcon={<NextIcon />} onClick={() => updateCurrentHoleInDB(currHole+1,showSnackbar, true, reloadCurrHole)}>
+            Next Hole
+        </Button>
+    </Box>
+      )}
       {isAdmin && (
         <PlayersDropdown
         players={players}

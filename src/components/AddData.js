@@ -65,10 +65,10 @@ function AddData(props) {
 
   return (
     <><Box display="flex" justifyContent="flex-end" alignItems="center" mb={2}>
-          <Button variant="outlined" color='success' startIcon={<AddIcon />} onClick={handleClickOpen}>
+          <Button variant="outlined" color='success' startIcon={<AddIcon />} onClick={() => handleClickOpen}>
               Add {title}
           </Button>
-      </Box><Dialog open={open} onClose={handleClose}>
+      </Box><Dialog open={open} onClose={() => handleClose}>
               <DialogTitle>Add New {title}</DialogTitle>
               <DialogContent>
                   {Object.entries(addRow).map(([key]) => {
