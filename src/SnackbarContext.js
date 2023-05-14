@@ -27,13 +27,13 @@ export const SnackbarProvider = ({ children }) => {
         onClose={handleClose}
         autoHideDuration={6000}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          zIndex: (theme) => theme.zIndex.snackbar,
-        }}
+        // sx={{
+        //   position: 'fixed',
+        //   top: 0,
+        //   left: 0,
+        //   width: '100%',
+        //   zIndex: (theme) => theme.zIndex.snackbar,
+        // }}
       >
         <Alert onClose={handleClose} severity={severity} variant="filled">
           {message}
