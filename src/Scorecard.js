@@ -112,20 +112,35 @@ useEffect(() => {
       <h2 className="text-3xl font-bold mb-4">Scorecard</h2>
       {isAdmin && (
         <Box display="flex" justifyContent="flex-end" alignItems="center" mb={2}>
-          <Button variant="outlined" color='primary' startIcon={<PreviousIcon />} onClick={() => updateCurrentHoleInDB(currHole-1,showSnackbar,true, reloadCurrHole)}>
+        <div className="space-x-2">
+          <Button
+            variant="outlined"
+            color="primary"
+            startIcon={<PreviousIcon />}
+            onClick={() => updateCurrentHoleInDB(currHole - 1, showSnackbar, true, reloadCurrHole)}
+          >
             Previous Hole
-        </Button>
-        <Button variant="outlined" color='primary' startIcon={<NextIcon />} onClick={() => updateCurrentHoleInDB(currHole+1,showSnackbar, true, reloadCurrHole)}>
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            startIcon={<NextIcon />}
+            onClick={() => updateCurrentHoleInDB(currHole + 1, showSnackbar, true, reloadCurrHole)}
+          >
             Next Hole
-        </Button>
-    </Box>
+          </Button>
+        </div>
+      </Box>
+      
       )}
       {isAdmin && (
+        <div className="mb-4">
         <PlayersDropdown
-        players={players}
-        value={selectedPlayerId}
-        onChange={handlePlayerChange}
-      />
+          players={players}
+          value={selectedPlayerId}
+          onChange={handlePlayerChange}
+        />
+      </div>
       )}
       <BasicTable data={data} columns={cols} onDelete={() => {console.log('do nothing')}} onEdit={(obj) => updateDB(`scorecards/${selectedPlayerId}`, obj, showSnackbar, true, reloadData)} dataType="scorecards"></BasicTable>
     </section>

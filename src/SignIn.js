@@ -4,6 +4,7 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } f
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null); // State for error message
   const auth = getAuth();
 
   const signIn = async (e) => {
@@ -19,6 +20,7 @@ const SignIn = () => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        setError("Incorrect email and/or password"); // Set error message
       });
   };
 
@@ -34,7 +36,7 @@ const SignIn = () => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        // ..
+        setError(errorMessage); // Set error message
       });
   };
 
@@ -47,6 +49,11 @@ const SignIn = () => {
   return (
     <div className="max-w-md mx-auto bg-white rounded p-6 shadow-md mt-10 mt-20 sm:mt-24">
       <h1 className="text-2xl text-center mb-4">Sign In / Sign Up</h1>
+      {error && ( // Render error message if there is an error
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+          {error}
+        </div>
+      )}
       <form className="space-y-4">
         <div>
           <label htmlFor="email" className="block mb-1">Email</label>
