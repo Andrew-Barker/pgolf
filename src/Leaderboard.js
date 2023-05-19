@@ -71,24 +71,33 @@ const Leaderboard = () => {
     for (const scorecard of data) {
       // If the team does not exist in the teamScores object, add it
       if (!teamScores[scorecard.team]) {
-        teamScores[scorecard.team] = 0;
+        teamScores[scorecard.team] = [];
       }
   
-      // Add the score to the team's total
-      teamScores[scorecard.team] += scorecard.strokes;
+      // Add the score to the team's array
+      teamScores[scorecard.team].push(scorecard.strokes);
+    }
+  
+    // Sort each team's scores and, if there are more than two, remove the highest one
+    for (const team in teamScores) {
+      teamScores[team].sort((a, b) => a - b);
+      if (teamScores[team].length > 2) {
+        teamScores[team].pop();
+      }
     }
   
     // Convert the teamScores object to an array of {id, team, score} objects
-    const teamScoresArray = Object.entries(teamScores).map(([team, strokes]) => ({
+    const teamScoresArray = Object.entries(teamScores).map(([team, scores]) => ({
       id: uuidv4(),
       team,
-      strokes,
-      score: strokes - (summedPar*2),
+      strokes: scores.reduce((a, b) => a + b, 0),
+      score: scores.reduce((a, b) => a + b, 0) - (summedPar * 2),
     }));
-
+  
     teamScoresArray.sort((a, b) => a.score - b.score);
     return teamScoresArray;
   }
+  
   
   
 
