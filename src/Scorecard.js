@@ -106,10 +106,10 @@ useEffect(() => {
     getCurrHole(setCurrHole, showSnackbar)
   }
 
-  return (<main>
-    <section id="scorecard">
+  return (<main className="container mx-auto px-4 py-8">
+    <section className="max-w-3xl mx-auto" id="scorecard">
     <PageTitle title="Scorecard"/>
-      <h2>Scorecard</h2>
+      <h2 className="text-3xl font-bold mb-4">Scorecard</h2>
       {isAdmin && (
         <Box display="flex" justifyContent="flex-end" alignItems="center" mb={2}>
           <Button variant="outlined" color='primary' startIcon={<PreviousIcon />} onClick={() => updateCurrentHoleInDB(currHole-1,showSnackbar,true, reloadCurrHole)}>

@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import Home from './Home';
 import Course from './Course';
 import Leaderboard from './Leaderboard';
 import Rules from './Rules';
 import Players from './Players';
 import Header from './Header';
+import Header2 from './Header2';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -19,7 +19,8 @@ function App() {
   return (
     <SnackbarProvider>
       <Router>
-      <Header />
+        <Header2/>
+      {/* <Header /> */}
       <div className="content">
         <Routes className="routes">
           <Route path="/" element={<Leaderboard />} />
