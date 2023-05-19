@@ -4,7 +4,7 @@ import PageTitle from './components/PageTitle';
 const Rules = () => (
   <main className="container mx-auto px-4 py-8">
     <PageTitle title="Rules" />
-    <section id="rules" className="max-w-3xl mx-auto">
+    <section id="rules" className="max-w-3xl mx-auto mt-10">
       <h2 className="text-3xl font-bold mb-4">Pub Golf Rules</h2>
       <ol className="list-decimal pl-6 mb-6">
         <li className="mb-2">Each team must complete all nine holes (bars) on the course.</li>

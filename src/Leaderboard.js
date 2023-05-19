@@ -95,15 +95,15 @@ const Leaderboard = () => {
   return (
   <main className="container mx-auto px-4 py-8">
     <PageTitle title="Leaderboard"/>
-    <section className="max-w-3xl mx-auto" id="course-info">
+    <section className="max-w-3xl mx-auto mt-10" id="course-info">
       {currCourseInfo.hole && currCourseInfo.hole > course.length && (<p><strong>Hole: FINAL</strong></p>)} 
       {currCourseInfo.hole && currCourseInfo.hole <= course.length && (<p><strong>Hole: {currCourseInfo.hole}</strong></p>)}      
     </section>
-    <section id="team-leaderboard">
+    <section id="team-leaderboard" className="max-w-3xl mx-auto">
       <h2 className="text-3xl font-bold mb-4">Team Leaderboard {currCourseInfo.par && (<small>(Par: {currCourseInfo.par*2})</small>)}</h2>
       <BasicTable data={teamScores} columns={teamCols} showActions={false} gridHeight="34vh" showTotalFooter={false}/>
     </section>
-    <section id="individual-leaderboard">
+    <section id="individual-leaderboard" className="max-w-3xl mx-auto mt-10" >
       <h2 className="text-3xl font-bold mb-4">Individual Leaderboard {currCourseInfo.par && (<small>(Par: {currCourseInfo.par})</small>)}</h2>
       <BasicTable data={indScores} columns={indCols} showActions={false} gridHeight="45vh" showTotalFooter={false}/>
     </section>

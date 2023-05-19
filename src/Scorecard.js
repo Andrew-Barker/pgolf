@@ -107,7 +107,7 @@ useEffect(() => {
   }
 
   return (<main className="container mx-auto px-4 py-8">
-    <section className="max-w-3xl mx-auto" id="scorecard">
+    <section className="max-w-3xl mx-auto mt-10" id="scorecard">
     <PageTitle title="Scorecard"/>
       <h2 className="text-3xl font-bold mb-4">Scorecard</h2>
       {isAdmin && (

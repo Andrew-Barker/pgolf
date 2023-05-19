@@ -33,7 +33,7 @@ const ENDPOINT = 'course/holes'
   return (
     <main className="container mx-auto px-4 py-8">
       <PageTitle title="Course Details"/>
-      <section className="max-w-3xl mx-auto" id="course">
+      <section className="max-w-3xl mx-auto mt-10" id="course">
         <h2 className="text-3xl font-bold mb-4">Course</h2>
         {/* <button onClick={getCourse}>Get course json</button> */}
         <AddData title={'Hole'} endpoint={ENDPOINT} fields={cols} onAdd={getData}/>

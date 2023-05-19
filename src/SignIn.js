@@ -1,17 +1,5 @@
 import React, { useState } from "react";
-import { TextField, Button, Typography, Box, Paper } from "@mui/material";
-import { styled } from "@mui/system";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-
-const StyledPaper = styled(Paper)({
-  padding: "2rem",
-  maxWidth: "400px",
-  margin: "2rem auto",
-});
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -57,47 +45,44 @@ const SignIn = () => {
   };
 
   return (
-    <StyledPaper elevation={3}>
-      <Typography variant="h5" align="center">
-        Sign In / Sign Up
-      </Typography>
-      <Box component="form" mt={2}>
-        <TextField
-          fullWidth
-          label="Email"
-          margin="normal"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <TextField
-          fullWidth
-          label="Password"
-          type="password"
-          margin="normal"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          onKeyPress={handleKeyPress}
-        />
-        <Button
-          fullWidth
-          variant="contained"
-          color="primary"
+    <div className="max-w-md mx-auto bg-white rounded p-6 shadow-md mt-10 mt-20 sm:mt-24">
+      <h1 className="text-2xl text-center mb-4">Sign In / Sign Up</h1>
+      <form className="space-y-4">
+        <div>
+          <label htmlFor="email" className="block mb-1">Email</label>
+          <input
+            type="email"
+            id="email"
+            className="w-full border border-gray-300 rounded px-3 py-2"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="password" className="block mb-1">Password</label>
+          <input
+            type="password"
+            id="password"
+            className="w-full border border-gray-300 rounded px-3 py-2"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
+        </div>
+        <button
+          className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded"
           onClick={signIn}
-          style={{ marginTop: "1rem" }}
         >
           Sign In
-        </Button>
-        <Button
-          fullWidth
-          variant="contained"
-          color="secondary"
+        </button>
+        <button
+          className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded"
           onClick={signUp}
-          style={{ marginTop: "1rem" }}
         >
           Sign Up
-        </Button>
-      </Box>
-    </StyledPaper>
+        </button>
+      </form>
+    </div>
   );
 };
 
