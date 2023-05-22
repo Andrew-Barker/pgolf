@@ -21,7 +21,7 @@ const Rules = () => (
       <h2 className="text-3xl font-bold mb-4">Side Contests</h2>
       <ol className="list-decimal pl-6 mb-6">
         <li className="mb-2">
-          <strong>Best Dressed:</strong> The player with the best golf attire gets a "Mulligan," allowing them to redo one hole during the game, keeping the lower of the two scores.
+          <strong>Best Dressed:</strong> The team with the attire which is voted as "Best" by other players get a "Mulligan," allowing them to redo one hole during the game, keeping the lower of the two scores.
         </li>
         <li className="mb-2">
           <strong>Closest to the Pin:</strong> Designate one hole where players must attempt to finish their drink in the exact number of sips equal to par. The player who comes closest without going under earns a one-stroke reduction in their overall score.
